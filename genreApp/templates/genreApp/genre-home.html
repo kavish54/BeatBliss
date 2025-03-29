@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genre Classifier</title>
+    {% load static %}
+    <link rel="stylesheet" href={% static "genreApp/genre-home.css" %}>
+</head>
+<body>
+    <nav>
+        <div class="logo">GenreClassifier</div>
+        <ul>
+            {% comment %} <li><a href="{% url "recHome" %}">RS</a></li> {% endcomment %}
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="top-section">
+        <h1>Discover Your Music's Genre</h1>
+        <p>Upload your song and let our AI classify its genre instantly.</p>
+    </div>
+
+    <div class="bottom-section">
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="file-upload" class="custom-file-upload">
+                Choose File
+            </label>
+            <input type="file" id="file-upload" name="file">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
