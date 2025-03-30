@@ -1,0 +1,91 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #2a2a3a;
+    color: white;
+}
+.container {
+    
+    display: flex;
+    width: 950px;
+    background: rgba(30, 30, 47, 0.7);
+    border-radius: 10px;
+    overflow: hidden;
+    height:80%;
+    
+}
+ #underline{
+    color:#c084fc;
+    text-decoration: none;
+} 
+
+.Userfield{
+    margin-top: 1rem;
+    padding-right: 1rem;
+}
+.left-section {
+    width: 40%;
+    display: flex;
+    flex-direction: column; 
+    /* padding-top: 100px; */
+    /* justify-content: space-between; */
+    /* padding: 20px; */
+    /* text-align: center; */
+    /* background-position: center; */
+    background: url("https://t4.ftcdn.net/jpg/02/49/08/19/360_F_249081945_tv8Huuf4mhjvHPg9ylS2zl6R2N5ISYUB.jpg") no-repeat left center/cover;
+    width: 90%;
+    /* height:fit-content; */
+}
+.image-overlay {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 5px;
+    
+}
+.right-section {
+    margin-top: 4rem;
+    width: 60%;
+    padding: 40px;
+}
+.input-group {
+    display: flex;
+    gap: 10px;
+}
+input, button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+}
+input {
+    background: #333;
+    color: white;
+}
+button.create-btn {
+    background: #7b5dfb;
+    color: white;
+    cursor: pointer;
+    /* margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    width: 30%;
+    justify-items: center;
+    margin-left: 8rem;  */
+    width: 106%;
+    margin-bottom: 1.5rem;
+    margin-top: 1rem;
+}
+#SignUp-button{
+    margin-left: 1rem;
+}
+button.create-btn:hover {
+    background: #6a4ae5;
+}

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignIn Page</title>
+    <link rel="stylesheet" href={% static "loginApp/sign-in.css" %}>
+    
+</head>
+<body>
+    <div class="container">
+        
+        <div class="left-section">
+        </div>
+        <div class="right-section" >
+            <div style="text-align: center;margin-bottom: 1rem;"><h1>Log In</h1></div>
+            <form class="Userfield">
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Enter your password" required>
+                
+                <button type="submit" class="create-btn">Sign In</button>
+                <p id="SignUp-button" style="text-align:center;">Don't have an account ? <a href={% url "genre-home.html" %} id="underline" >Sign Up</a></p>
+            </form> 
+            
+    </div>
+</body>
+</html>

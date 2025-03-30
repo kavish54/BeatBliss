@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Page</title>
+    <link rel="stylesheet" href={% static "loginApp/sign-up.css" %}>
+    
+</head>
+<body>
+    <div class="container">
+        
+        <div class="left-section">
+        </div>
+        <div class="right-section">
+            <div style="text-align: center;margin-bottom: 1rem;"><h1>BeatBliss</h1></div>
+            <form method="POST" class="Userfield" action="" >
+                {% csrf_token %}
+                <input type="user-name" placeholder="UserName" required>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Enter your password" required>
+                
+                <button type="submit" class="create-btn" >Sign Up</button>
+                <p id="Signin-button" style="text-align:center;">Don't have an account ? <a href={% url "register" %} id="underline" >Sign in</a></p>
+            </form> 
+    </div>
+    
+</body>
+</html>
