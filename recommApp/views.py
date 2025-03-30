@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render
 
 # Create your views here.
@@ -8,6 +9,8 @@ import pandas as pd
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth,SpotifyClientCredentials
 from django.http import JsonResponse
+
+from recommApp.utils.recomFinder import load_knn_model, recommend_songs, train_and_save_knn_model
 
 os.environ['SPOTIPY_CLIENT_ID'] = 'cfd82609829c4df08e69069c5c37e201'
 os.environ['SPOTIPY_CLIENT_SECRET'] = '0cc553a74abf4a328b0cd70a661fd01f'
@@ -108,13 +111,21 @@ def spotify_autocomplete(request):
     return JsonResponse({"suggestions": suggestions})
 
 def show_recommendations(request,sid):
+
+    data_path = os.path.join(settings.MEDIA_ROOT, "datasets/recom_songs.csv")
+    merged_df = pd.read_csv(data_path)
+
+    nn_model, feature_matrix = load_knn_model()
+    if nn_model is None:
+        nn_model, feature_matrix = train_and_save_knn_model(merged_df)
+
+    # song_name = "The Middle" 
+    recommendations = recommend_songs(sid, merged_df, nn_model, feature_matrix, 5)
+    print(f"Recommended songs for '{sid}':")
+    for idx, (rec_song, similarity) in enumerate(recommendations, 1): 
+        print(f"{idx}. '{rec_song}' (Similarity: {similarity})")
     context = {
-        "sid" : sid 
+        "sid" : sid,
+        "recommendations" : recommendations
     }
-    # recs = sp.audio_features(tracks=[sid])
-    # for track in recs['tracks']:
-    #     print(f"Track name: {track['name']}")
-    #     print(f"Artist: {track['artists'][0]['name']}")
-    #     print(f"URL: {track['external_urls']['spotify']}")
-    #     print("------")
     return render(request,'recommApp/recom-result.html',context=context)

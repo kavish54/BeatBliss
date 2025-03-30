@@ -8,5 +8,10 @@
 <body>
     <h1>Recom Result page</h1>
     {{ sid }}
+    <br>
+    {% for song in recommendations %}
+    <h3>{{ song.song_name }}</h3>
+    
+    {% endfor %}
 </body>
 </html>
