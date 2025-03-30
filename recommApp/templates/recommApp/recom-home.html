@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #suggestions-list {
+            list-style: none;
+            padding: 0;
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            width: 600px;
+        }
+        #suggestions-list li {
+            padding: 5px;
+            cursor: pointer;
+        }
+        #suggestions-list li:hover {
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Login Successfully</h1>
+    <input type="text" id="search-bar" placeholder="Search for a song..." autocomplete="off">
+    <ul id="suggestions-list"></ul>
+    <script>
+        document.getElementById("search-bar").addEventListener("input", function() {
+            let query = this.value;
+            if (query.length < 2) return;
+        
+            fetch(`/autocomplete/?q=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                let suggestionsList = document.getElementById("suggestions-list");
+                suggestionsList.innerHTML = "";
+        
+                data.suggestions.forEach(song => {
+                    let listItem = document.createElement("li");
+                    let sid = song.id;
+                    let url = `/results/${sid}/`;
+                    listItem.innerHTML = `
+                        <a href="${url}">
+                        <img src="${song.image}" width="40">
+                        <strong>${song.name}</strong> - ${song.artist}
+                        </a>
+                    `;
+                    suggestionsList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error("Error fetching autocomplete:", error));
+        });
+    </script>
+</body>
+</html>
