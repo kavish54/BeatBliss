@@ -60,6 +60,7 @@ def recommend_songs(song_name, merged_df, nn_model, feature_matrix, num_recommen
     for i, dist in zip(indices[0][1:], distances[0][1:]):  # Skip the first result (itself)
         recommended_songs.append({
             "song_name": merged_df.iloc[i]["song_name"],
+            "song_id": merged_df.iloc[i]["song_id"],
             "similarity": round(1 - dist, 4)  # Convert distance to similarity
         })
 
