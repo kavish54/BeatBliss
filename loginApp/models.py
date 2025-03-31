@@ -13,13 +13,6 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
 
-        Profile.objects.create(user=user)
-        print("Profile created")
-        # with transaction.atomic():
-        #     user.save(using=self._db)
-        #     print('user saved')
-        #     transaction.on_commit(lambda: Profile.objects.create(user=user))
-        #     print("Profile created")
         return user
 
     def create_superuser(self, email, name, password=None):
