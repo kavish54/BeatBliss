@@ -31,7 +31,8 @@ sp = spotipy.Spotify(
 )
 
 def recomHome(request):
-    return render(request,'recommApp/spotify-login.html',context = {})
+    return render(request,'recommApp/recom-home.html',context = {})
+
 # user-library-read add in below
 def loginauth(request):
     scope = "playlist-modify-private playlist-modify-public user-read-email user-library-modify user-library-read"

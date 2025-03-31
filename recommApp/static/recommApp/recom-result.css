@@ -1,11 +1,12 @@
 /* General Styling */
-body {
+body,html {
     font-family: 'Arial', sans-serif;
     background-color: #181818;
     color: white;
     text-align: center;
     margin: 0;
     padding: 20px;
+    /* overflow: hidden; */
 }
 
 h1 {

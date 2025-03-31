@@ -1,22 +1,59 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Spotify Login</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'recommApp/spotify-popup.css' %}">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'recommApp/spotify-popup.css' %}" />
+  </head>
+  <body>
+    <!-- Button to trigger popup -->
+    <button id="openPopup">Open Popup</button>
 
-    <div class="card">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg" alt="Spotify Logo" class="spotify-logo">
+    <!-- Popup Card -->
+    <div id="popupCard" class="popup">
+      <div class="card">
+        <span class="close-btn">&times;</span>
+        <!-- Close button -->
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg"
+          alt="Spotify Logo"
+          class="spotify-logo"
+        />
         <h2>Login to Your Spotify Account</h2>
-        <a href="{% url 'spotify-login' %}">
-            <button>Login</button>
-        </a>
+        <form action="{% url 'loginauth' %}">
+          {% csrf_token %}
+          <input class="btn-submit" type="submit" value="Login with Spotify" />
+        </form>
+      </div>
     </div>
+    <script>
+        // Get elements
+        const openBtn = document.getElementById("openPopup");
+        const popup = document.getElementById("popupCard");
+        const closeBtn = document.querySelector(".close-btn");
 
-</body>
+        // Show the popup
+        openBtn.onclick = () => {
+            popup.style.display = "block";
+        };
+
+        // Close the popup when clicking the close button
+        closeBtn.onclick = () => {
+            popup.style.display = "none";
+        };
+
+        // Close the popup when clicking outside the card
+        window.onclick = (event) => {
+            if (event.target === popup) {
+                popup.style.display = "none";
+            }
+        };
+    </script>
+  </body>
 </html>
