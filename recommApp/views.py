@@ -14,6 +14,9 @@ from loginApp.forms import User
 from recommApp.models import Playlist
 from recommApp.utils.recomFinder import load_knn_model, recommend_songs, train_and_save_knn_model
 
+import json
+from django.http import JsonResponse
+
 os.environ['SPOTIPY_CLIENT_ID'] = 'cfd82609829c4df08e69069c5c37e201'
 os.environ['SPOTIPY_CLIENT_SECRET'] = '0cc553a74abf4a328b0cd70a661fd01f'
 os.environ['SPOTIPY_REDIRECT_URI'] = 'http://127.0.0.1:8000/callback'
@@ -29,13 +32,20 @@ sp = spotipy.Spotify(
 
 def recomHome(request):
     return render(request,'recommApp/spotify-login.html',context = {})
-
+# user-library-read add in below
 def loginauth(request):
-    scope = "playlist-modify-private playlist-modify-public user-library-read user-read-email"
-    auth = SpotifyOAuth(scope=scope)
+    scope = "playlist-modify-private playlist-modify-public user-read-email user-library-modify user-library-read"
+    auth = SpotifyOAuth(
+        client_id=os.getenv("SPOTIPY_CLIENT_ID"),
+        client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
+        redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI"),
+        scope=scope,
+        show_dialog=True
+    )
+
 
     auth_url = auth.get_authorize_url()
-
+    
     return redirect(auth_url)
 
 def spotify_callback(request):
@@ -174,3 +184,21 @@ def add_playlist_spotify(request,plid):
     sp.playlist_add_items(new_playlist['id'], track_uris)
 
     return HttpResponse(f"<h1>Added Playlist to Spotify!</h1>Playlist ID: {new_playlist['id']}<br>Tracks: {track_uris}")
+
+def like_song(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        song_id = data.get("song_id")
+
+        token_info = request.session.get("spotify_token")
+        if not token_info:
+            return JsonResponse({"status": "error", "message": "User not authenticated with Spotify"}, status=401)
+
+        sp = spotipy.Spotify(auth=token_info["access_token"])
+        granted_scopes = sp.current_user()["product"]  # Check user's premium status (extra debug)
+        print("Granted Scopes for User:", granted_scopes)
+        try:
+            sp.current_user_saved_tracks_add([song_id])
+            return JsonResponse({"status": "success", "message": "Song added to Liked Songs"})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
