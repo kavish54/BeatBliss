@@ -1,4 +1,4 @@
-{% comment %} <!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -56,5 +56,56 @@
         <button onclick="likeSong('{{ song.song_id }}')">❤️ Like</button>
         <br>
     {% endfor %}
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommended Songs</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'recommApp/recom-result.css' %}">
+</head>
+<body>
+
+    <h1>🎶 Recommended Songs</h1>
+
+    <div class="container">
+        <!-- <p>Selected Song ID: <strong>{{ sid }}</strong></p> -->
+         <h2>Your song:</h2>
+        <div class="song-card">
+            {% if song.image %}
+                <img src="{{ song.image }}" alt="Album Art">
+            {% else %}
+                <img src="https://media.tacdn.com/media/attractions-splice-spp-674x446/0b/a9/99/ac.jpg" alt="No Image">
+            {% endif %}
+            <div class="song-info">
+                <div class="song-name">{{ sid }}</div>
+                <div class="artist-name">Taylor Swift</div>
+            </div>
+        </div>
+        <h2>Similar songs:</h2>
+        {% if recommendations %}
+            {% for song in recommendations %}
+                <div class="song-card">
+                    {% if song.image %}
+                        <img src="{{ song.image }}" alt="Album Art">
+                    {% else %}
+                        <img src="https://media.tacdn.com/media/attractions-splice-spp-674x446/0b/a9/99/ac.jpg" alt="No Image">
+                    {% endif %}
+                    <div class="song-info">
+                        <div class="song-name">{{ song.song_name }}</div>
+                        <div class="artist-name">Taylor Swift</div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No recommendations found.</p>
+        {% endif %}
+    </div>
+
 </body>
 </html>

@@ -156,6 +156,13 @@ def show_recommendations(request,sid):
     }
     return render(request,'recommApp/recom-result.html',context=context)
 
+def show_popup(request):
+    return render(request,"recommApp/spotify-popup.html")
+
+def spotify_login(request):  # This handles the login page
+    return render(request, "recommApp/spotify-login.html")
+
+
 def add_playlist_spotify(request,plid):
     token_info = request.session.get("spotify_token")
     spotify_user_id = request.session.get("spotify_user_id")
