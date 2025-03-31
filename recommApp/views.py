@@ -129,3 +129,9 @@ def show_recommendations(request,sid):
         "recommendations" : recommendations
     }
     return render(request,'recommApp/recom-result.html',context=context)
+
+def show_popup(request):
+    return render(request,"recommApp/spotify-popup.html")
+
+def spotify_login(request):  # This handles the login page
+    return render(request, "recommApp/spotify-login.html")

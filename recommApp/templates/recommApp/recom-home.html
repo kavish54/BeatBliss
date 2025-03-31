@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -54,4 +54,328 @@
         });
     </script>
 </body>
+</html>  -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Search</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'recommApp/recom-home.css' %}">
+</head>
+<body>
+
+    <h1>✅ Login Successful</h1>
+
+    <div class="search-container">
+        <input type="text" id="search-bar" placeholder="Search for a song..." autocomplete="off">
+        <ul id="suggestions-list"></ul>
+    </div>
+
+    <script>
+        document.getElementById("search-bar").addEventListener("input", function() {
+            let query = this.value.trim();
+            if (query.length < 2) return;
+        
+            fetch(`/autocomplete/?q=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                let suggestionsList = document.getElementById("suggestions-list");
+                suggestionsList.innerHTML = "";
+        
+                data.suggestions.forEach(song => {
+                    let sid = song.id;
+                    let url = `/results/${sid}/`;
+                    let listItem = document.createElement("li");
+                    listItem.innerHTML = `
+                        <a href="${url}">
+                            <img src="${song.image}" class="song-img">
+                            <div class="song-text">
+                                <strong>${song.name}</strong> <br>
+                                <small>${song.artist}</small>
+                            </div>
+                        </a>
+                    `;
+                    suggestionsList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error("Error fetching autocomplete:", error));
+        });
+    </script>
+
+</body>
 </html>
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Login Modal</title>
+    <style>
+        /* Styling for the modal */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+       
+        .modal-content {
+            background: rgba(25, 25, 25, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            width: 320px;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal img {
+            width: 60px;
+            margin-bottom: 15px;
+        }
+
+        .modal h2 {
+            font-size: 18px;
+            margin-top:0.3rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .modal button {
+            background: #17a74b;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal button:hover {
+            background: #17a74b;
+        }
+
+        /* Close button */
+        .close-btn {
+            color: white;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+     <div class>
+        <input type="text" id="search-bar" placeholder="Search for a song..." autocomplete="off">
+        <ul id="suggestions-list"></ul>
+     </div>
+    
+
+    <div id="spotify-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg" alt="Spotify Logo">
+            <h2>Login to Your Spotify Account</h2>
+            <a href="{% url 'spotify-login' %}">
+                <button>Login</button>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Show the modal after 2 seconds
+        setTimeout(() => {
+            document.getElementById("spotify-modal").style.display = "flex";
+        }, 2000);
+
+        // Close the modal when clicking the close button
+        document.querySelector(".close-btn").addEventListener("click", () => {
+            document.getElementById("spotify-modal").style.display = "none";
+        });
+
+        // Close the modal when clicking outside the box
+        window.onclick = function(event) {
+            let modal = document.getElementById("spotify-modal");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        };
+
+        // Autocomplete search functionality
+        document.getElementById("search-bar").addEventListener("input", function() {
+            let query = this.value;
+            if (query.length < 2) return;
+        
+            fetch(`/autocomplete/?q=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                let suggestionsList = document.getElementById("suggestions-list");
+                suggestionsList.innerHTML = "";
+        
+                data.suggestions.forEach(song => {
+                    let listItem = document.createElement("li");
+                    let sid = song.id;
+                    let url = `/results/${sid}/`;
+                    listItem.innerHTML = `
+                        <a href="${url}">
+                        <img src="${song.image}" width="40">
+                        <strong>${song.name}</strong> - ${song.artist}
+                        </a>
+                    `;
+                    suggestionsList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error("Error fetching autocomplete:", error));
+        });
+        </script>
+    </style>
+
+</body>
+</html>
+ 
+ <!-- <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Spotify Song Search</title>
+     <style>
+         body {
+             font-family: Arial, sans-serif;
+         }
+         #search-container {
+             position: relative;
+             width: 400px;
+             margin: 20px auto;
+         }
+         #search-bar {
+             width: 100%;
+             padding: 10px;
+             font-size: 16px;
+         }
+         #suggestions-list {
+             list-style: none;
+             padding: 0;
+             position: absolute;
+             width: 100%;
+             background: white;
+             border: 1px solid #ddd;
+             max-height: 200px;
+             overflow-y: auto;
+         }
+         #suggestions-list li {
+             padding: 10px;
+             cursor: pointer;
+             display: flex;
+             align-items: center;
+             gap: 10px;
+         }
+         #suggestions-list li:hover {
+             background: #f0f0f0;
+         }
+         .song-card {
+             display: flex;
+             align-items: center;
+             gap: 15px;
+             background: white;
+             border-radius: 10px;
+             padding: 10px;
+             margin-top: 15px;
+             width: 400px;
+             border: 1px solid #ddd;
+         }
+         .song-card img {
+             width: 50px;
+             height: 50px;
+             border-radius: 5px;
+         }
+         .like-button {
+             background: none;
+             border: none;
+             cursor: pointer;
+             font-size: 20px;
+             color: grey;
+         }
+         .like-button.liked {
+             color: red;
+         }
+     </style>
+ </head>
+ <body>
+ 
+     <div id="search-container">
+         <input type="text" id="search-bar" placeholder="Search for a song..." autocomplete="off">
+         <ul id="suggestions-list"></ul>
+     </div>
+ 
+     <div id="selected-song-container"></div>
+ 
+     <script>
+         document.getElementById("search-bar").addEventListener("input", function() {
+             let query = this.value.trim();
+             if (query.length < 2) return;
+ 
+             fetch(`/autocomplete/?q=${query}`)
+             .then(response => response.json())
+             .then(data => {
+                 let suggestionsList = document.getElementById("suggestions-list");
+                 suggestionsList.innerHTML = "";
+ 
+                 data.suggestions.forEach(song => {
+                     let listItem = document.createElement("li");
+                     listItem.innerHTML = `
+                         <img src="${song.image}" width="40">
+                         <strong>${song.name}</strong> - ${song.artist}
+                     `;
+                     listItem.addEventListener("click", function() {
+                         addSongToCard(song);
+                     });
+                     suggestionsList.appendChild(listItem);
+                 });
+             })
+             .catch(error => console.error("Error fetching autocomplete:", error));
+         });
+ 
+         function addSongToCard(song) {
+             let selectedContainer = document.getElementById("selected-song-container");
+ 
+             let card = document.createElement("div");
+             card.classList.add("song-card");
+ 
+             card.innerHTML = `
+                 <img src="${song.image || 'default-placeholder.jpg'}">
+                 <div>
+                     <strong>${song.name}</strong> <br>
+                     <small>${song.artist}</small>
+                 </div>
+                 <button class="like-button">❤️</button>
+             `;
+ 
+             let likeButton = card.querySelector(".like-button");
+             likeButton.addEventListener("click", function() {
+                 likeButton.classList.toggle("liked");
+             });
+ 
+             selectedContainer.appendChild(card);
+         }
+     </script>
+ 
+ </body>
+ </html>
+  -->
