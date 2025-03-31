@@ -1,37 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Genre Classifier</title>
+    <title>UI/UX Inspiration</title>
     {% load static %}
-    <link rel="stylesheet" href={% static "genreApp/genre-home.css" %}>
+    <link rel="stylesheet" href="{% static "genreApp/genre-home.css" %}">   
 </head>
+
 <body>
-    <nav>
-        <div class="logo">GenreClassifier</div>
-        <ul>
-            {% comment %} <li><a href="{% url "recHome" %}">RS</a></li> {% endcomment %}
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
-    </nav>
+    <header class="header">
+        <div class="logo">?</div>
+        <div id="pname">
+            <h2>BeatBliss</h2>
+        </div>
+        <div class="platforms">
+            <a href=""><button>Genre</button></a>
+            <button>Recommender</button>
+            <button>About Us</button>
+        </div>
+        <nav>
+            <a href="#" class="login-btn">Login</a>
+            <button class="try-btn">P</button>
+        </nav>
+    </header>
 
-    <div class="top-section">
-        <h1>Discover Your Music's Genre</h1>
-        <p>Upload your song and let our AI classify its genre instantly.</p>
-    </div>
+    <p class="sub-text">🚀 Want to find the genre of your favourite song ? 🚀</p>
+    <h1 id="info">
+        <p style="margin-bottom:0.9rem;">Upload your favourite song here,</p>
+        <p>and be ready to enter the musical world</p>
+    </h1>
 
-    <div class="bottom-section">
-        <form action="" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label for="file-upload" class="custom-file-upload">
-                Choose File
-            </label>
-            <input type="file" id="file-upload" name="file">
-            <button type="submit">Submit</button>
-        </form>
+    <div class="upload-container">
+        <label for="file-upload" id="upload-btn">Choose File</label>
+        <input type="file" id="file-upload" accept=".mp3, .wav, .flac">
+        <span id="clear-file">&times;</span>
+        <button id="go-btn" disabled>Go</button>
     </div>
+    </section>
+
+    <script>
+        const fileInput = document.getElementById("file-upload");
+        const uploadBtn = document.getElementById("upload-btn");
+        const clearFile = document.getElementById("clear-file");
+        const goBtn = document.getElementById("go-btn");
+
+        fileInput.addEventListener("change", function () {
+            if (fileInput.files.length > 0) {
+                uploadBtn.textContent = fileInput.files[0].name;
+                clearFile.style.display = "inline";
+                goBtn.disabled = false;
+            }
+        });
+
+        clearFile.addEventListener("click", function () {
+            fileInput.value = "";
+            uploadBtn.textContent = "Choose File";
+            clearFile.style.display = "none";
+            goBtn.disabled = true;
+        });
+    </script>
 </body>
+
 </html>
