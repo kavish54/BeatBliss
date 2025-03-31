@@ -1,30 +1,57 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Signup Page</title>
-    <link rel="stylesheet" href={% static "loginApp/sign-up.css" %}>
-    
-</head>
-<body>
+    <link rel="stylesheet" href="{% static 'loginApp/sign-up.css' %}" />
+    <style>
+      .error {
+        color: #d9534f;
+        background: rgba(255, 0, 0, 0.1);
+        padding: 6px 10px;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-top: 5px;
+        padding-bottom: 6px;
+      }
+    </style>
+  </head>
+  <body>
     <div class="container">
-        
-        <div class="left-section">
+      <div class="left-section"></div>
+      <div class="right-section">
+        <div style="text-align: center; margin-bottom: 1rem">
+          <h1>BeatBliss</h1>
         </div>
-        <div class="right-section">
-            <div style="text-align: center;margin-bottom: 1rem;"><h1>BeatBliss</h1></div>
-            <form method="POST" class="Userfield" action="" >
-                {% csrf_token %}
-                <input type="user-name" placeholder="UserName" required>
-                <input type="email" placeholder="Email" required>
-                <input type="password" placeholder="Enter your password" required>
-                
-                <button type="submit" class="create-btn" >Sign Up</button>
-                <p id="Signin-button" style="text-align:center;">Don't have an account ? <a href={% url "register" %} id="underline" >Sign in</a></p>
-            </form> 
+        <form method="POST" class="Userfield">
+          {% csrf_token %}
+
+          <label for="id_name">Name:</label>
+          {{ form.name }} {% if form.name.errors %}
+          <div class="error">{{ form.name.errors.0 }}</div>
+          {% endif %}
+
+          <label for="id_email">Email:</label>
+          {{ form.email }} {% if form.email.errors %}
+          <div class="error">{{ form.email.errors.0 }}</div>
+          {% endif %}
+
+          <label for="id_password">Password:</label>
+          {{ form.password }} {% if form.password.errors %}
+          <div class="error">{{ form.password.errors.0 }}</div>
+          {% endif %}
+
+          <button type="submit" class="create-btn">Sign Up</button>
+
+          <p id="Signin-button" style="text-align: center">
+            Already have an account?
+            <a href="{% url 'login' %}" id="underline">Sign in</a>
+          </p>
+        </form>
+      </div>
     </div>
-    
-</body>
+  </body>
 </html>

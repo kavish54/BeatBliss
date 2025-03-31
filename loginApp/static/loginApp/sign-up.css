@@ -1,6 +1,7 @@
 *{
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
@@ -41,8 +42,9 @@ body {
     /* padding: 20px; */
     /* text-align: center; */
     /* background-position: center; */
-    background: url("https://t4.ftcdn.net/jpg/02/49/08/19/360_F_249081945_tv8Huuf4mhjvHPg9ylS2zl6R2N5ISYUB.jpg") no-repeat left center/cover;
+    background: url("https://img.freepik.com/free-photo/digital-art-portrait-person-listening-music-headphones_23-2151065089.jpg?t=st=1743400246~exp=1743403846~hmac=220bfc857291c68cb9538899320a0d8e2654b84963f0fbe8992a5bf2b9178343&w=740") no-repeat center center/cover;
     width: 90%;
+    /* height: auto; */
     /* height:fit-content; */
 }
 .image-overlay {
