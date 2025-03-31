@@ -1,190 +1,111 @@
-/* General Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-  }
-  
-  /* Dark Background */
-  body {
-    background-color: #18181B;
-    color: white;
-    text-align: center; 
-    padding-top: 0.5rem; 
-  }
-  
-  /* Header */
-  .header {
-    display: flex;
-    align-items: center;
-    margin-bottom:3rem;
-    padding: 10px 40px;
-  }
-  
-  /* Logo */
-  .logo {
-    font-size: 30px;
-    font-weight: bold;
-    color: yellow;
-  }
-  
-  
-  #pname {
-    width: 180px;
-    margin-left: rem;
-    color: white;
-    text-align: center;
-    align-items: center;
-  }
-  
-  /* Navigation Buttons */
-  nav {
-    display: flex;
-    align-items: center;
-   
-  }
-  
-  .login-btn {
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    margin-left:22rem;
-    margin-right:1rem;
-    font-weight: 700;
-  }
-  
-  .try-btn {
-    background: yellow;
-    color: black;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 30px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  /* Hero Section */
-  .hero {
-    margin-top: 1rem;
-  }
-  
-  /* Platform Buttons */
-  .platforms {
-    display: flex;
-      align-items: center;
-      justify-content: center;
-      
-      border-image: initial;
-      padding: 5px;
-      border-radius: 10px;
-      background: rgb(39, 39, 42);
-      margin-left:15rem;
-      padding:0.4rem;
-      border:1px solid #3F3F46;
-  }
-  
-  .platforms button {
-    background: rgb(39, 39, 42);
-    color: #A1A1AA;
-    border: none;
-    padding: 8px 15px;
-      cursor: pointer;
-    font-size: 14px;
-    
-  }
-  
-  
-  /* Supporting Text */
-  .sub-text {
-    font-size: 16px;
-    opacity: 0.7;
-    margin-bottom: 1.5rem;
-    color:#A1A1AA;
-  }
-  
-  /* Main Heading */
-  h1 {
-    font-size: 38px;
-    font-weight: bold;
-    line-height: 1.4;
-  }
-  #info{
-    margin-bottom:3rem;
-  }
-  
-  
-  
-  
-  
-  
-  /* 
-  // Description 
-  .description {
-    font-size: 18px;
-    opacity: 0.8;
-    margin-top: 2rem;
-  } */
-  
-  /* Buttons */
-  .buttons {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-  }
-  
-  .upload-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-  }
-  
-  #upload-btn {
-    display: inline-block;
-    background: #ffdd57;
-    color: black;
-    padding: 12px 20px;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 5px;
-    min-width: 200px;
-    text-align: center;
-  }
-  
-  #upload-btn:hover {
-    background: #f7c600;
-  }
-  
-  input[type="file"] {
-    display: none;
-  }
-  
-  #clear-file {
-    cursor: pointer;
-    font-size: 20px;
-    color: red;
-    display: none;
-  }
-  
-  #go-btn {
-    background: #28a745;
-    color: white;
-    padding: 12px 20px;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  #go-btn:disabled {
-   
-    background: #6c757d;
-    color:#dcdcdf;
-    cursor: not-allowed;
-  }
-  
-  #go-btn:hover:enabled {
-    background: #218838;
-  }
+/* General Styles */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #121212;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Navbar */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 50px;
+  background: #1e1e1e;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+nav ul li {
+  display: inline;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: white;
+  transition: 0.3s;
+}
+
+nav ul li a:hover {
+  color: #00bcd4;
+}
+
+/* Top Section (Banner) */
+.top-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.top-section h1 {
+  font-size: 2.5rem;
+  color: #00bcd4;
+}
+
+/* Bottom Section (Upload Form) */
+.bottom-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #1e1e1e;
+  padding: 20px;
+}
+
+/* Upload Form */
+form {
+  background: #252525;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
+}
+
+.custom-file-upload {
+  display: block;
+  background: #00bcd4;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  margin-bottom: 15px;
+  color: black;
+  font-weight: bold;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+button {
+  background: #00bcd4;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: black;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #0097a7;
+}

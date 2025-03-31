@@ -9,11 +9,12 @@
 </head>
 <body>
     <nav>
-        <div class="logo">GenreClassifier</div>
+        <div class="logo">BeatBliss</div>
         <ul>
-            <li><a href="{% url 'genreHome' %}">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
+            {% comment %} <li><a href="{% url "recHome" %}">RS</a></li> {% endcomment %}
+            <li><a href={% url "genreHome" %}>Home</a></li>
+            <li><a href={% url "recHome" %}>Recommender</a></li>
+            <li><a href={% url "login" %}>Login</a></li>
         </ul>
     </nav>
 

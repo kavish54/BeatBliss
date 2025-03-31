@@ -70,6 +70,15 @@
     <link rel="stylesheet" href="{% static 'recommApp/recom-result.css' %}">
 </head>
 <body>
+    <nav>
+        <div class="logo">BeatBliss</div>
+        <ul>
+            {% comment %} <li><a href="{% url "recHome" %}">RS</a></li> {% endcomment %}
+            <li><a href={% url "genreHome" %}>Home</a></li>
+            <li><a href={% url "recHome" %}>Recommender</a></li>
+            <li><a href={% url "login" %}>Login</a></li>
+        </ul>
+    </nav>
 
     <h1>🎶 Recommended Songs</h1>
 
@@ -77,19 +86,19 @@
         <!-- <p>Selected Song ID: <strong>{{ sid }}</strong></p> -->
          <h2>Your song:</h2>
         <div class="song-card">
-            {% if song.image %}
-                <img src="{{ song.image }}" alt="Album Art">
+            {% if current.image %}
+                <img src="{{ current.image }}" alt="Album Art">
             {% else %}
                 <img src="https://media.tacdn.com/media/attractions-splice-spp-674x446/0b/a9/99/ac.jpg" alt="No Image">
             {% endif %}
             <div class="song-info">
-                <div class="song-name">{{ sid }}</div>
-                <div class="artist-name">Taylor Swift</div>
+                <div class="song-name">{{ current.name }}</div>
+                <div class="artist-name"> {{ current.artist }} </div>
             </div>
         </div>
         <h2>Similar songs:</h2>
-        {% if recommendations %}
-            {% for song in recommendations %}
+        {% if song_details %}
+            {% for song in song_details %}
                 <div class="song-card">
                     {% if song.image %}
                         <img src="{{ song.image }}" alt="Album Art">
@@ -97,8 +106,8 @@
                         <img src="https://media.tacdn.com/media/attractions-splice-spp-674x446/0b/a9/99/ac.jpg" alt="No Image">
                     {% endif %}
                     <div class="song-info">
-                        <div class="song-name">{{ song.song_name }}</div>
-                        <div class="artist-name">Taylor Swift</div>
+                        <div class="song-name">{{ song.name }}</div>
+                        <div class="artist-name"> {{ song.artist }} </div>
                     </div>
                 </div>
             {% endfor %}

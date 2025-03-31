@@ -5,7 +5,6 @@ body {
     color: white;
     text-align: center;
     margin: 0;
-    padding: 20px;
 }
 
 h1 {
@@ -97,3 +96,37 @@ h1 {
     color: white;
     width: 100%;
 }
+
+/* Navbar */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    background: #1e1e1e;
+  }
+  
+  .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+  }
+  
+  nav ul li {
+    display: inline;
+  }
+  
+  nav ul li a {
+    text-decoration: none;
+    color: white;
+    transition: 0.3s;
+  }
+  
+  nav ul li a:hover {
+    color: #00bcd4;
+  }

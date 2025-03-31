@@ -85,7 +85,8 @@
         border-radius: 8px;
         cursor: pointer;
         transition: 0.3s;
-        margin-bottom: 20px;
+        margin-bottom: 30px;
+        margin-top: 30px;
       }
 
       /* Animation */
@@ -100,19 +101,30 @@
     </style>
   </head>
   <body>
-    <h1>✅ Login Successful</h1>
+    <nav>
+        <div class="logo">BeatBliss</div>
+        <ul>
+            {% comment %} <li><a href="{% url "recHome" %}">RS</a></li> {% endcomment %}
+            <li><a href={% url "genreHome" %}>Home</a></li>
+            <li><a href={% url "recHome" %}>Recommender</a></li>
+            <li><a href={% url "login" %}>Login</a></li>
+        </ul>
+    </nav>
+    {% comment %} <h1>✅ Login Successful</h1> {% endcomment %}
 
     <!-- New Popup Trigger Button -->
-    <button id="openPopup">Login with spotify</button>
+     
+    {% comment %} <button id="openPopup">Login with Spotify</button> {% endcomment %}
+
+    {% if request.session.spotify_token %}
+        <h1>✅ Login Successful</h1>
+    {% else %}
+        <button id="openPopup">Login with Spotify</button>
+    {% endif %}
 
     <div class="search-container">
-      <input
-        type="text"
-        id="search-bar"
-        placeholder="Search for a song..."
-        autocomplete="off"
-      />
-      <ul id="suggestions-list"></ul>
+        <input type="text" id="search-bar" placeholder="Search for a song..." autocomplete="off">
+    <ul id="suggestions-list"></ul>
     </div>
 
     <!-- Popup Card (copied from spotify-popup.html) -->
@@ -195,5 +207,6 @@
             );
         });
     </script>
+    
   </body>
 </html>

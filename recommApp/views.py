@@ -31,6 +31,8 @@ sp = spotipy.Spotify(
 )
 
 def recomHome(request):
+    if 'spotify_token' in request.session:
+        del request.session['spotify_token']
     return render(request,'recommApp/recom-home.html',context = {})
 
 # user-library-read add in below
@@ -136,9 +138,29 @@ def show_recommendations(request,sid):
 
     # song_name = "The Middle" 
     recommendations = recommend_songs(sid, merged_df, nn_model, feature_matrix, 5)
+
+    track = sp.track(sid)
+
+    current_song = ({
+        "name": track['name'],
+        "artist": ", ".join(artist['name'] for artist in track['artists']),
+        "album": track['album']['name'],
+        "image": track['album']['images'][0]['url'] if track['album']['images'] else "",
+        "spotify_url": track['external_urls']['spotify']
+    })
     suggested = []
-    
+    song_details = []
     for song in recommendations:
+        track = sp.track(song["song_id"])
+
+        song_details.append({
+            "id": song["song_id"],
+            "name": track['name'],
+            "artist": ", ".join(artist['name'] for artist in track['artists']),
+            "album": track['album']['name'],
+            "image": track['album']['images'][0]['url'] if track['album']['images'] else "",
+            "spotify_url": track['external_urls']['spotify']
+        })
         suggested.append(song["song_id"])
 
     user_instance = User.objects.get(email='kavish@gmail.com')
@@ -152,8 +174,10 @@ def show_recommendations(request,sid):
     
     context = {
         "sid" : sid,
+        "current" : current_song,
         "recommendations" : recommendations,
         "playlist_id" : playlist.playlistID,
+        "song_details" : song_details,
     }
     return render(request,'recommApp/recom-result.html',context=context)
 
