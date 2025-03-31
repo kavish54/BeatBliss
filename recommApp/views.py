@@ -8,7 +8,7 @@ import os
 import pandas as pd
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth,SpotifyClientCredentials
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 
 from loginApp.forms import User
 from recommApp.models import Playlist
@@ -31,7 +31,7 @@ def recomHome(request):
     return render(request,'recommApp/spotify-login.html',context = {})
 
 def loginauth(request):
-    scope = "user-library-read"
+    scope = "playlist-modify-private playlist-modify-public user-library-read user-read-email"
     auth = SpotifyOAuth(scope=scope)
 
     auth_url = auth.get_authorize_url()
@@ -49,10 +49,13 @@ def spotify_callback(request):
         token_info = auth.get_access_token(code)
         
         # Save token in session (optional)
-        # request.session["spotify_token"] = token_info 
+        request.session["spotify_token"] = token_info 
 
         sp = spotipy.Spotify(auth=token_info["access_token"])
         user = sp.current_user()
+        spotify_user_id = user['id']
+
+        request.session['spotify_user_id'] = spotify_user_id
         playlists = sp.current_user_playlists()
         
         context = {
@@ -60,7 +63,6 @@ def spotify_callback(request):
             'user':user,
             'playlist':playlists
         }
-        print(playlists)
         return render(request,'recommApp/recom-home.html',context)
     
 def spotify_autocomplete(request):
@@ -139,6 +141,36 @@ def show_recommendations(request,sid):
     
     context = {
         "sid" : sid,
-        "recommendations" : recommendations
+        "recommendations" : recommendations,
+        "playlist_id" : playlist.playlistID,
     }
     return render(request,'recommApp/recom-result.html',context=context)
+
+def add_playlist_spotify(request,plid):
+    token_info = request.session.get("spotify_token")
+    spotify_user_id = request.session.get("spotify_user_id")
+
+    if not token_info or not spotify_user_id:
+        return HttpResponse("User not authenticated with Spotify", status=401)
+    
+    sp = spotipy.Spotify(auth=token_info["access_token"])
+
+    playlist = Playlist.objects.get(playlistID=plid)
+
+    track_uris = []
+    for song_id in playlist.recommSongs:
+        track_uris.append(f"spotify:track:{song_id}")  # Spotify URIs format
+    track_uris.append(f"spotify:track:{playlist.songID}")
+    print("Track URIs:", track_uris)
+
+    # Create a new playlist in the user's Spotify account
+    new_playlist = sp.user_playlist_create(
+        user=spotify_user_id,
+        name=f"BeatBliss: {playlist.songID}",
+        public=False,
+        description="Recommended songs playlist from BeatBliss"
+    )
+
+    sp.playlist_add_items(new_playlist['id'], track_uris)
+
+    return HttpResponse(f"<h1>Added Playlist to Spotify!</h1>Playlist ID: {new_playlist['id']}<br>Tracks: {track_uris}")

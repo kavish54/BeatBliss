@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
+
+from profileApp.models import Profile
 from .forms import RegisterForm, LoginForm
 
 def register_view(request):
@@ -8,6 +10,7 @@ def register_view(request):
         user = form.save(commit=False)
         user.set_password(form.cleaned_data['password'])  
         user.save()
+        Profile.objects.create(user=user)
         return redirect('login')  
     return render(request, 'loginApp/sign-up.html', {'form': form})
 

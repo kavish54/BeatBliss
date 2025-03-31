@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models,transaction
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 import uuid
 
@@ -10,10 +10,16 @@ class UserManager(BaseUserManager):
             raise ValueError("Email ID is required")
         email = self.normalize_email(email)
         user = self.model(email=email, name=name)
-        user.set_password(password)  
+        user.set_password(password)
         user.save(using=self._db)
 
         Profile.objects.create(user=user)
+        print("Profile created")
+        # with transaction.atomic():
+        #     user.save(using=self._db)
+        #     print('user saved')
+        #     transaction.on_commit(lambda: Profile.objects.create(user=user))
+        #     print("Profile created")
         return user
 
     def create_superuser(self, email, name, password=None):
