@@ -22,6 +22,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('genreApp.urls')),
+    path('',include('recommApp.urls')),
+    path('',include('loginApp.urls')),
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,60 @@
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recom-Result</title>
+</head>
+<body>
+    <h1>Recom Result page</h1>
+    <a href="{% url "add_playlist" playlist_id %}">Add to Playlist</a>
+    {{ sid }}
+    <br>
+    {% for song in recommendations %}
+    <h3>{{ song.song_name }}</h3>
+    <h3> {{ song.song_id }} </h3>
+    {% endfor %}
+</body>
+</html> {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recom-Result</title>
+    <script>
+        function likeSong(songId) {
+            fetch("/like-song/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({ song_id: songId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    alert("Song added to Liked Songs on Spotify!");
+                } else {
+                    alert("Error: " + data.message);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+</head>
+<body>
+    <h1>Recom Result Page</h1>
+    <a href="{% url 'add_playlist' playlist_id %}">Add to Playlist</a>
+    <br> Song ID: {{ sid }} <br>
+
+    {% for song in recommendations %}
+        <h3>{{ song.song_name }}</h3>
+        <h3>{{ song.song_id }}</h3>
+        <button onclick="likeSong('{{ song.song_id }}')">❤️ Like</button>
+        <br>
+    {% endfor %}
+</body>
+</html>
