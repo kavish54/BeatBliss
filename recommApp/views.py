@@ -195,8 +195,7 @@ def like_song(request):
             return JsonResponse({"status": "error", "message": "User not authenticated with Spotify"}, status=401)
 
         sp = spotipy.Spotify(auth=token_info["access_token"])
-        granted_scopes = sp.current_user()["product"]  # Check user's premium status (extra debug)
-        print("Granted Scopes for User:", granted_scopes)
+        
         try:
             sp.current_user_saved_tracks_add([song_id])
             return JsonResponse({"status": "success", "message": "Song added to Liked Songs"})
