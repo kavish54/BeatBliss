@@ -1,0 +1,72 @@
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+</head>
+<body>
+    <h1>WELCOME to KRISHNA's PROFILE</h1>
+</body>
+</html> {% endcomment %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Playlists</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .playlist {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        .song {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .song img {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Your Liked Playlists</h1>
+    
+    {% if playlist_dict %}
+        {% for playlist_id, playlist in playlist_dict.items %}
+            <div class="playlist">
+                <h2>Playlist ID: {{ playlist_id }}</h2>
+                
+                {% for song in playlist.songs %}
+                    <div class="song">
+                        <img src="{{ song.image_url }}" alt="Song Cover">
+                        <div>
+                            <strong>{{ song.title }}</strong> - {{ song.artist }}<br>
+                            {% if song.preview_url %}
+                                <audio controls>
+                                    <source src="{{ song.preview_url }}" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            {% else %}
+                                <em>No preview available</em>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No liked playlists found.</p>
+    {% endif %}
+</body>
+</html>

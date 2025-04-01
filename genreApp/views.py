@@ -8,6 +8,11 @@ from genreApp.utils.genre_finder import genre_finder,convert_to_wav,feature_extr
 User = get_user_model()
 
 def genreHome(request):
+    current_user = request.session.get('current_user')
+    print(current_user)
+    context = {
+        "current_user" : current_user
+    }
     if request.method == "POST":
         print("njadbaksjdbkasjdbajksbd")
         form = UploadSongForm(request.POST, request.FILES)
@@ -38,4 +43,4 @@ def genreHome(request):
 
     else:
         form = UploadSongForm()
-    return render(request,'genreApp/genre-home.html')
+    return render(request,'genreApp/genre-home.html',context)

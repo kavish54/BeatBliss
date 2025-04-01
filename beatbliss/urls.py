@@ -24,6 +24,8 @@ urlpatterns = [
     path('',include('genreApp.urls')),
     path('',include('recommApp.urls')),
     path('',include('loginApp.urls')),
+    path('',include('profileApp.urls')),
+
 ]
 
 if settings.DEBUG:
