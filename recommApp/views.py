@@ -163,7 +163,7 @@ def show_recommendations(request,sid):
         })
         suggested.append(song["song_id"])
 
-    user_instance = User.objects.get(email='kavish@gmail.com')
+    user_instance = User.objects.get(email=request.session.get("current_user"))
 
     playlist = Playlist.objects.create(
         user = user_instance,
