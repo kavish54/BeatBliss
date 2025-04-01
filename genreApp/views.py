@@ -9,14 +9,15 @@ User = get_user_model()
 
 def genreHome(request):
     if request.method == "POST":
+        print("njadbaksjdbkasjdbajksbd")
         form = UploadSongForm(request.POST, request.FILES)
         if form.is_valid():
             song_obj = form.save(commit=False)
             song_obj.user = User.objects.get(email="admin@gmail.com")
             song_obj.name = song_obj.file.name
-
+            print("njadbaksjdbkasjdbajksbd")
             song_obj.save()
-            
+            print("njadbaksjdbkasjdbajksbd")
             # Convert and Extract Features
             file_path = song_obj.file.path
             wav_path = convert_to_wav(file_path)  # Convert to WAV

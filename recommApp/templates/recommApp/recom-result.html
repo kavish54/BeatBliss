@@ -47,7 +47,7 @@
 </head>
 <body>
     <h1>Recom Result Page</h1>
-    <a href="{% url 'add_playlist' playlist_id %}">Add to Playlist</a>
+    <a href="{% url 'add_playlist' playlist_id %}">Add Playlist</a>
     <br> Song ID: {{ sid }} <br>
 
     {% for song in recommendations %}
@@ -84,7 +84,11 @@
 
     <div class="container">
         <!-- <p>Selected Song ID: <strong>{{ sid }}</strong></p> -->
-         <h2>Your song:</h2>
+         <div class='top-content'>
+            <h2>Your song:</h2>
+            <button class='like-button-pl'><a class='like-playlist' href="{% url 'add_playlist' playlist_id %}">Add Playlist</a></button>
+         </div>
+         
         <div class="song-card">
             {% if current.image %}
                 <img src="{{ current.image }}" alt="Album Art">
@@ -95,8 +99,11 @@
                 <div class="song-name">{{ current.name }}</div>
                 <div class="artist-name"> {{ current.artist }} </div>
             </div>
+            <button class="like-button" onclick="likeSong('{{ sid }}')">❤️</button>
         </div>
-        <h2>Similar songs:</h2>
+        <div class="top-content">
+            <h2>Similar songs:</h2>
+        </div>
         {% if song_details %}
             {% for song in song_details %}
                 <div class="song-card">
@@ -109,12 +116,33 @@
                         <div class="song-name">{{ song.name }}</div>
                         <div class="artist-name"> {{ song.artist }} </div>
                     </div>
+                    <button class="like-button" onclick="likeSong('{{ song.id }}')">❤️</button>
                 </div>
             {% endfor %}
         {% else %}
             <p>No recommendations found.</p>
         {% endif %}
     </div>
-
+    <script>
+        function likeSong(songId) {
+            fetch("/like-song/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({ song_id: songId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    alert("Song added to Liked Songs on Spotify!");
+                } else {
+                    alert("Error: " + data.message);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
 </body>
 </html>
