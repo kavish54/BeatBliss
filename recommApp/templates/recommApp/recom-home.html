@@ -1,57 +1,216 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Song Search</title>
+    <link rel="stylesheet" href="{% static 'recommApp/recom-home.css' %}" />
     <style>
-        #suggestions-list {
-            list-style: none;
-            padding: 0;
-            position: absolute;
-            background: white;
-            border: 1px solid #ddd;
-            width: 600px;
+      /* Popup Styling */
+      .popup-home {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 999;
+      }
+
+      /* Card Styling */
+      .card-home {
+        background: rgba(25, 25, 25, 0.9);
+        padding: 3rem;
+        border-radius: 12px;
+        text-align: center;
+        width: 350px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        margin: 10% auto;
+        position: relative;
+        animation: fadeIn 0.5s;
+      }
+
+      /* Spotify Logo */
+      .spotify-logo {
+        width: 80px;
+        margin-bottom: 15px;
+      }
+
+      /* Headings */
+      h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+      }
+
+      /* Submit Button */
+      .btn-submit-home {
+        background: #1db954;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        font-size: 16px;
+        border-radius: 50px;
+        cursor: pointer;
+        width: 100%;
+        transition: 0.3s;
+      }
+
+      .btn-submit-home:hover {
+        background: #17a74b;
+      }
+
+      /* Close Button */
+      .close-btn-home {
+        color: white;
+        font-size: 28px;
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .close-btn-home:hover {
+        color: red;
+      }
+
+      #openPopup{
+        background: #1DB954;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-bottom: 30px;
+        margin-top: 30px;
+      }
+
+      /* Animation */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
         }
-        #suggestions-list li {
-            padding: 5px;
-            cursor: pointer;
+        to {
+          opacity: 1;
         }
-        #suggestions-list li:hover {
-            background: #f0f0f0;
-        }
+      }
     </style>
-</head>
-<body>
-    <h1>Login Successfully</h1>
-    <input type="text" id="search-bar" placeholder="Search for a song..." autocomplete="off">
+  </head>
+  <body>
+    <nav>
+      <div class="logo">BeatBliss</div>
+      <ul>
+          <li><a href={% url "genreHome" %}>Home</a></li>
+          <li><a href={% url "recHome" %}>Recommender</a></li>
+
+          {% if request.session.current_user %}
+              <li><a href={% url "profile-page" %}> {{ request.session.current_user }} </a></li>
+          {% else %}
+              <li><a href={% url "login" %}>Login</a></li>
+          {% endif %}
+      </ul>
+    </nav>
+    {% comment %} <h1>✅ Login Successful</h1> {% endcomment %}
+
+    <!-- New Popup Trigger Button -->
+     
+    {% comment %} <button id="openPopup">Login with Spotify</button> {% endcomment %}
+
+    {% if request.session.spotify_token %}
+        <h1>✅ Login Successful</h1>
+    {% else %}
+        <button id="openPopup">Login with Spotify</button>
+    {% endif %}
+
+    <div class="search-container">
+        <input type="text" id="search-bar" placeholder="Search for a song..." autocomplete="off">
     <ul id="suggestions-list"></ul>
+    </div>
+
+    <!-- Popup Card (copied from spotify-popup.html) -->
+    <div id="popupHome" class="popup-home">
+      <div class="card-home">
+        <span class="close-btn-home">&times;</span>
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg"
+          alt="Spotify Logo"
+          class="spotify-logo"
+        />
+        <h2>Login to Your Spotify Account</h2>
+        <form action="{% url 'loginauth' %}">
+          {% csrf_token %}
+          <input
+            class="btn-submit-home"
+            type="submit"
+            value="Login with Spotify"
+          />
+        </form>
+      </div>
+    </div>
+
     <script>
-        document.getElementById("search-bar").addEventListener("input", function() {
-            let query = this.value;
-            if (query.length < 2) return;
-        
-            fetch(`/autocomplete/?q=${query}`)
-            .then(response => response.json())
-            .then(data => {
-                let suggestionsList = document.getElementById("suggestions-list");
-                suggestionsList.innerHTML = "";
-        
-                data.suggestions.forEach(song => {
-                    let listItem = document.createElement("li");
-                    let sid = song.id;
-                    let url = `/results/${sid}/`;
-                    listItem.innerHTML = `
-                        <a href="${url}">
-                        <img src="${song.image}" width="40">
-                        <strong>${song.name}</strong> - ${song.artist}
-                        </a>
-                    `;
-                    suggestionsList.appendChild(listItem);
-                });
+      // JavaScript for the popup
+      const openBtn = document.getElementById("openPopup");
+      const popup = document.getElementById("popupHome");
+      const closeBtn = document.querySelector(".close-btn-home");
+
+      // Open the popup
+      openBtn.onclick = () => {
+        popup.style.display = "block";
+      };
+
+      // Close the popup
+      closeBtn.onclick = () => {
+        popup.style.display = "none";
+      };
+
+      // Close popup when clicking outside the card
+      window.onclick = (event) => {
+        if (event.target === popup) {
+          popup.style.display = "none";
+        }
+      };
+    </script>
+
+    <script>
+      // Autocomplete Search Logic
+      document
+        .getElementById("search-bar")
+        .addEventListener("input", function () {
+          let query = this.value.trim();
+          if (query.length < 2) return;
+
+          fetch(`/autocomplete/?q=${query}`)
+            .then((response) => response.json())
+            .then((data) => {
+              let suggestionsList = document.getElementById("suggestions-list");
+              suggestionsList.innerHTML = "";
+
+              data.suggestions.forEach((song) => {
+                let sid = song.id;
+                let url = `/results/${sid}/`;
+                let listItem = document.createElement("li");
+                listItem.innerHTML = `
+                            <a href="${url}">
+                                <img src="${song.image}" class="song-img">
+                                <div class="song-text">
+                                    <strong>${song.name}</strong> <br>
+                                    <small>${song.artist}</small>
+                                </div>
+                            </a>
+                        `;
+                suggestionsList.appendChild(listItem);
+              });
             })
-            .catch(error => console.error("Error fetching autocomplete:", error));
+            .catch((error) =>
+              console.error("Error fetching autocomplete:", error)
+            );
         });
     </script>
-</body>
+    
+  </body>
 </html>

@@ -9,12 +9,16 @@
 </head>
 <body>
     <nav>
-        <div class="logo">GenreClassifier</div>
+        <div class="logo">BeatBliss</div>
         <ul>
-            {% comment %} <li><a href="{% url "recHome" %}">RS</a></li> {% endcomment %}
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href={% url "genreHome" %}>Home</a></li>
+            <li><a href={% url "recHome" %}>Recommender</a></li>
+
+            {% if request.session.current_user %}
+                <li><a href={% url "profile-page" %}> {{ request.session.current_user }} </a></li>
+            {% else %}
+                <li><a href={% url "login" %}>Login</a></li>
+            {% endif %}
         </ul>
     </nav>
 

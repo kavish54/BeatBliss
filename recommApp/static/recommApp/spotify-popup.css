@@ -1,0 +1,102 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Button Styling */
+button {
+    background: #1DB954;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #17a74b;
+}
+
+/* Popup Styling */
+.popup {
+    display: none;  /* Hidden by default */
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1;
+}
+
+/* Card Styling */
+.card {
+    background: rgba(25, 25, 25, 0.9);
+    padding: 3rem;
+    border-radius: 12px;
+    text-align: center;
+    width: 350px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    margin: 10% auto;
+    position: relative;
+    animation: fadeIn 0.5s;
+}
+
+/* Spotify Logo */
+.spotify-logo {
+    width: 80px;
+    margin-bottom: 15px;
+}
+
+/* Headings */
+h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+/* Submit Button */
+.btn-submit {
+    background: #1DB954;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 50px;
+    cursor: pointer;
+    width: 100%;
+    transition: 0.3s;
+}
+
+.btn-submit:hover {
+    background: #17a74b;
+}
+
+/* Close Button */
+.close-btn {
+    color: white;
+    font-size: 28px;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.close-btn:hover {
+    color: red;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

@@ -8,15 +8,21 @@ from genreApp.utils.genre_finder import genre_finder,convert_to_wav,feature_extr
 User = get_user_model()
 
 def genreHome(request):
+    current_user = request.session.get('current_user')
+    print(current_user)
+    context = {
+        "current_user" : current_user
+    }
     if request.method == "POST":
+        print("njadbaksjdbkasjdbajksbd")
         form = UploadSongForm(request.POST, request.FILES)
         if form.is_valid():
             song_obj = form.save(commit=False)
             song_obj.user = User.objects.get(email="admin@gmail.com")
             song_obj.name = song_obj.file.name
-
+            print("njadbaksjdbkasjdbajksbd")
             song_obj.save()
-            
+            print("njadbaksjdbkasjdbajksbd")
             # Convert and Extract Features
             file_path = song_obj.file.path
             wav_path = convert_to_wav(file_path)  # Convert to WAV
@@ -37,4 +43,4 @@ def genreHome(request):
 
     else:
         form = UploadSongForm()
-    return render(request,'genreApp/genre-home.html')
+    return render(request,'genreApp/genre-home.html',context)

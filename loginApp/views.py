@@ -11,7 +11,8 @@ def register_view(request):
         user.set_password(form.cleaned_data['password'])  
         user.save()
         Profile.objects.create(user=user)
-        return redirect('login')  
+        request.session['current_user'] = form.cleaned_data['email']
+        return redirect('genreHome')  
     return render(request, 'loginApp/sign-up.html', {'form': form})
 
 def login_view(request):
@@ -22,8 +23,9 @@ def login_view(request):
         user = authenticate(request, username=email, password=password)  
 
         if user:
+            request.session['current_user'] = email
             login(request, user)
-            return redirect('home')
+            return redirect('genreHome')
         else:
             print("Authentication failed!") 
     return render(request, 'loginApp/sign-in.html', {'form': form})

@@ -31,7 +31,10 @@ sp = spotipy.Spotify(
 )
 
 def recomHome(request):
-    return render(request,'recommApp/spotify-login.html',context = {})
+    if 'spotify_token' in request.session:
+        del request.session['spotify_token']
+    return render(request,'recommApp/recom-home.html',context = {})
+
 # user-library-read add in below
 def loginauth(request):
     scope = "playlist-modify-private playlist-modify-public user-read-email user-library-modify user-library-read"
@@ -135,9 +138,29 @@ def show_recommendations(request,sid):
 
     # song_name = "The Middle" 
     recommendations = recommend_songs(sid, merged_df, nn_model, feature_matrix, 5)
+
+    track = sp.track(sid)
+
+    current_song = ({
+        "name": track['name'],
+        "artist": ", ".join(artist['name'] for artist in track['artists']),
+        "album": track['album']['name'],
+        "image": track['album']['images'][0]['url'] if track['album']['images'] else "",
+        "spotify_url": track['external_urls']['spotify']
+    })
     suggested = []
-    
+    song_details = []
     for song in recommendations:
+        track = sp.track(song["song_id"])
+
+        song_details.append({
+            "id": song["song_id"],
+            "name": track['name'],
+            "artist": ", ".join(artist['name'] for artist in track['artists']),
+            "album": track['album']['name'],
+            "image": track['album']['images'][0]['url'] if track['album']['images'] else "",
+            "spotify_url": track['external_urls']['spotify']
+        })
         suggested.append(song["song_id"])
 
     user_instance = User.objects.get(email='kavish@gmail.com')
@@ -151,10 +174,19 @@ def show_recommendations(request,sid):
     
     context = {
         "sid" : sid,
+        "current" : current_song,
         "recommendations" : recommendations,
         "playlist_id" : playlist.playlistID,
+        "song_details" : song_details,
     }
     return render(request,'recommApp/recom-result.html',context=context)
+
+def show_popup(request):
+    return render(request,"recommApp/spotify-popup.html")
+
+def spotify_login(request):  # This handles the login page
+    return render(request, "recommApp/spotify-login.html")
+
 
 def add_playlist_spotify(request,plid):
     token_info = request.session.get("spotify_token")
