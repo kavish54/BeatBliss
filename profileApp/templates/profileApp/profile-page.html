@@ -9,6 +9,35 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+    <nav class="navbar">
+        <div class="left-section">
+          <div class="hamburger" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <div class="logo">
+            <span>⚡</span>
+            <a href="#" class="brand">BeatBliss</a>
+          </div>
+        </div>
+  
+        <div class="button-group">
+          <button><a class='nav-button' href={% url "genreHome" %}>Home</a></button>
+          <button><a class='nav-button' href={% url "recHome" %}>Recommender</a></button>
+          <button><a class='nav-button' href='#'>About us</a></button>
+        </div>
+  
+        <div class="auth">
+            {% if request.session.current_user %}
+            <a href={% url "profile-page" %}
+                ><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img"
+            /></a>
+            {% else %}
+                <a href={% url "login" %}><h3>Login</h3></a>
+            {% endif %}
+        </div>
+    </nav>
 
     <!-- Profile Section -->
     <div class="profile-container">

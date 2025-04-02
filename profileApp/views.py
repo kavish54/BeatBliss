@@ -1,5 +1,5 @@
 import os
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 import spotipy
 from django.conf import settings
 from loginApp.models import User
@@ -90,7 +90,6 @@ def profilePage(request):
             }
         except SpotifyException:
             print(f"liked songs----Invalid Spotify ID: {song_id}")  # Debugging
-
 
     context = {"playlist_dict": playlist_dict, "history_dict": history_dict,"liked_songs":liked_songs,"username":username}
     return render(request, 'profileApp/profile-page.html', context)
