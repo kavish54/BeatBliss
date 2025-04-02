@@ -59,15 +59,19 @@
                         <button class="toggle-icon">▼</button>
                     </div>
                     <div class="recommendations">
+                        <button class="like-button" onclick="likePlaylist('{{ playlist_id }}')">Add to spotify</button>
                         {% for song in playlist.songs %}
                             <div class="song">
                                 <img src="{{ song.image_url }}" alt="Song Cover" class="song-img">
                                 <div>
                                     <strong>{{ song.title }}</strong> - {{ song.artist }}<br>
                                 </div>
+                                <button class="like-button" onclick="likeSong('{{ song.spotify_id }}')">❤️</button>
                             </div>
+                            
                         {% endfor %}
                     </div>
+                    
                 </div>
             {% endfor %}
         {% else %}
@@ -86,12 +90,14 @@
                         <button class="toggle-icon">▼</button>
                     </div>
                     <div class="recommendations">
+                        <button class="like-button" onclick="likePlaylist('{{ playlist_id }}')">Add to spotify</button>
                         {% for song in playlist.songs %}
                             <div class="song">
                                 <img src="{{ song.image_url }}" alt="Song Cover" class="song-img">
                                 <div>
                                     <strong>{{ song.title }}</strong> - {{ song.artist }}<br>
                                 </div>
+                                <button class="like-button" onclick="likeSong('{{ song.spotify_id }}')">❤️</button>
                             </div>
                         {% endfor %}
                     </div>
@@ -148,7 +154,45 @@
         <p>No liked songs found.</p>
     {% endif %}
 </div>
-
-
+<script>
+    function likeSong(songId) {
+        fetch("/like-song/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({ song_id: songId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                alert("Song added to Liked Songs on Spotify!");
+            } else {
+                alert("Error: " + data.message);
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    }
+    function likePlaylist(plId) {
+        fetch("/like-playlist/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({ pl_id: plId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                alert("playlist added");
+            } else {
+                alert("Error: " + data.message);
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    }
+</script>
 </body>
 </html>

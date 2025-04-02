@@ -11,6 +11,7 @@ from spotipy.oauth2 import SpotifyOAuth,SpotifyClientCredentials
 from django.http import HttpResponse, JsonResponse
 
 from loginApp.forms import User
+from profileApp.models import Profile
 from recommApp.models import Playlist
 from recommApp.utils.recomFinder import load_knn_model, recommend_songs, train_and_save_knn_model
 
@@ -200,9 +201,9 @@ def add_playlist_spotify(request,plid):
     playlist = Playlist.objects.get(playlistID=plid)
 
     track_uris = []
+    track_uris.append(f"spotify:track:{playlist.songID}")
     for song_id in playlist.recommSongs:
         track_uris.append(f"spotify:track:{song_id}")  # Spotify URIs format
-    track_uris.append(f"spotify:track:{playlist.songID}")
     print("Track URIs:", track_uris)
 
     # Create a new playlist in the user's Spotify account
@@ -221,15 +222,19 @@ def like_song(request):
     if request.method == "POST":
         data = json.loads(request.body)
         song_id = data.get("song_id")
-
+        user = request.session.get("current_user")
         token_info = request.session.get("spotify_token")
         if not token_info:
             return JsonResponse({"status": "error", "message": "User not authenticated with Spotify"}, status=401)
 
         sp = spotipy.Spotify(auth=token_info["access_token"])
-        
+        print(song_id+"gujaasananan")
         try:
+            print(song_id+"dasananan")
             sp.current_user_saved_tracks_add([song_id])
+            profile = Profile.objects.get(user=user)
+            profile.liked_song_list.append(song_id)
+            profile.save()
             return JsonResponse({"status": "success", "message": "Song added to Liked Songs"})
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)

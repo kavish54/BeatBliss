@@ -1,4 +1,6 @@
+import json
 import os
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 import spotipy
 from django.conf import settings
@@ -94,3 +96,41 @@ def profilePage(request):
     context = {"playlist_dict": playlist_dict, "history_dict": history_dict,"liked_songs":liked_songs,"username":username}
     return render(request, 'profileApp/profile-page.html', context)
 
+def like_playlist(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        plid = data.get("pl_id")
+        user = request.session.get("current_user")
+        token_info = request.session.get("spotify_token")
+        spotify_user_id = request.session.get("spotify_user_id")
+        if not token_info:
+            return JsonResponse({"status": "error", "message": "User not authenticated with Spotify"}, status=401)
+
+        sp = spotipy.Spotify(auth=token_info["access_token"])
+        print(plid+"gujaasananan")
+        try:
+            print(plid+"dasananan")
+            playlist = Playlist.objects.get(playlistID=plid)
+
+            track_uris = []
+            track_uris.append(f"spotify:track:{playlist.songID}")
+            for song_id in playlist.recommSongs:
+                track_uris.append(f"spotify:track:{song_id}")  # Spotify URIs format
+            print("Track URIs:", track_uris)
+
+            # Create a new playlist in the user's Spotify account
+            new_playlist = sp.user_playlist_create(
+                user=spotify_user_id,
+                name=f"BeatBliss: {playlist.songID}",
+                public=False,
+                description="Recommended songs playlist from BeatBliss"
+            )
+
+            sp.playlist_add_items(new_playlist['id'], track_uris)
+
+            profile = Profile.objects.get(user=user)
+            profile.liked_song_list.append(song_id)
+            profile.save()
+            return JsonResponse({"status": "success", "message": "Playlist added to spotify"})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
