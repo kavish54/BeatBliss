@@ -1,4 +1,4 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -13,83 +13,99 @@ body {
     background: #2a2a3a;
     color: white;
 }
+
 .container {
-    
     display: flex;
     width: 950px;
     background: rgba(30, 30, 47, 0.7);
     border-radius: 10px;
     overflow: hidden;
-    height:80%;
-    
+    height: 80%;
 }
- #underline{
-    color:#c084fc;
-    text-decoration: none;
-} 
 
-.Userfield{
+#underline {
+    color: #c084fc;
+    text-decoration: none;
+}
+
+.Userfield {
     margin-top: 1rem;
     padding-right: 1rem;
-   
+    width: 100%;
 }
+
 .left-section {
-    width: 40%;
-    display: flex;
-    flex-direction: column; 
-    /* padding-top: 100px; */
-    /* justify-content: space-between; */
-    /* padding: 20px; */
-    /* text-align: center; */
-    /* background-position: center; */
-    background: url("https://img.freepik.com/free-photo/digital-art-portrait-person-listening-music-headphones_23-2151065089.jpg?t=st=1743400246~exp=1743403846~hmac=220bfc857291c68cb9538899320a0d8e2654b84963f0fbe8992a5bf2b9178343&w=740") no-repeat center center/cover;
     width: 90%;
-    /* height: auto; */
-    /* height:fit-content; */
+    display: flex;
+    flex-direction: column;
+    background: url("https://img.freepik.com/free-photo/digital-art-portrait-person-listening-music-headphones_23-2151065089.jpg?t=st=1743400246~exp=1743403846~hmac=220bfc857291c68cb9538899320a0d8e2654b84963f0fbe8992a5bf2b9178343&w=740") no-repeat center center/cover;
+    height: 100%;
 }
-.image-overlay {
-    background: rgba(0, 0, 0, 0.5);
-    padding: 20px;
-    border-radius: 5px;
-    
-}
+
 .right-section {
-    margin-top: 2rem;
+    margin-top: 0; /* Removed extra top margin */
     width: 60%;
-    padding: 40px;
+    padding: 20px 40px;  /* Reduced padding */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align the content to the top */
 }
+
 .input-group {
     display: flex;
     gap: 10px;
+    flex-direction: column; /* Makes the inputs stack vertically */
 }
+
 input, button {
-    width: 100%;
-    padding: 10px;
+    width: 100%;  /* Ensures all inputs and buttons are the same width */
+    padding: 12px;
     margin: 10px 0;
     border: none;
     border-radius: 5px;
+    font-size: 1rem;  /* Standardizing font size for inputs and buttons */
 }
+
 input {
     background: #333;
     color: white;
 }
+
 button.create-btn {
     background: #7b5dfb;
     color: white;
     cursor: pointer;
-    /* margin-top: 1rem;
-    margin-bottom: 1.5rem;
-    width: 30%;
-    justify-items: center;
-    margin-left: 8rem;  */
-    width: 106%;
-    margin-bottom: 1.5rem;
-    
+    width: 100%;  /* Makes the button full width */
+    margin-top: 10px;  /* Adds some space above the button */
 }
-#Signin-button{
-    margin-left: 1rem;
 
-}
 button.create-btn:hover {
     background: #6a4ae5;
+}
+
+.error {
+    color: #d9534f;
+    background: rgba(255, 0, 0, 0.1);
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-top: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    display: none; /* Hide the error message by default */
+}
+
+#email-error {
+    position: relative;
+    top: -5px;
+}
+
+#Signin-button {
+    margin-left: 1rem;
+}
+
+p {
+    text-align: center;
+    margin-top: 20px;
 }

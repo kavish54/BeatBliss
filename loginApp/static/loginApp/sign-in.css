@@ -92,3 +92,34 @@ button.create-btn {
 button.create-btn:hover {
     background: #6a4ae5;
 }
+.form-group {
+    margin-bottom: 1.5rem; /* Add spacing between each form group */
+}
+
+.form-group label {
+    display: block; /* Ensures the label is on its own line */
+    margin-bottom: 0.5rem; /* Space between label and input field */
+    font-weight: bold; /* Optional, to make the label stand out */
+}
+
+input {
+    background: #333;
+    color: white;
+    width: 106%; /* Same width as the sign-in button */
+    padding: 10px; /* Add padding inside the input field */
+    margin-top: 0.5rem; /* Slight margin between label and input field */
+}
+.right-section h1 {
+    text-align: center;
+    margin-bottom: 2rem; /* Add space below the heading */
+    font-size: 2rem; /* Optional: Adjust the font size for better readability */
+}
+#SignUp-button a {
+    color: #c084fc;
+    text-decoration: none;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+#SignUp-button a:hover {
+    color: #7b5dfb; /* Change color on hover */
+}
