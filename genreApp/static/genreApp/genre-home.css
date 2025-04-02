@@ -9,7 +9,7 @@ body {
   height: 100vh;
 }
 
-/* Navbar */
+/* Navbar
 nav {
   display: flex;
   justify-content: space-between;
@@ -41,7 +41,7 @@ nav ul li a {
 
 nav ul li a:hover {
   color: #00bcd4;
-}
+} */
 
 /* Top Section (Banner) */
 .top-section {
@@ -108,4 +108,8 @@ button {
 
 button:hover {
   background: #0097a7;
+}
+
+.nav-button {
+  text-decoration: underline;
 }
