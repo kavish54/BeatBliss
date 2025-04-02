@@ -15,7 +15,7 @@
         <img src="https://media.istockphoto.com/id/1403500817/photo/the-craggies-in-the-blue-ridge-mountains.jpg?s=612x612&w=0&k=20&c=N-pGA8OClRVDzRfj_9AqANnOaDS3devZWwrQNwZuDSk=" alt="Profile Photo" class="profile-photo">
         <div class="profile-info">
             <h2> {{ username }} </h2>
-            <p> {{ request.session.current_user }} </p>
+            <p> {{ request.session.current_user }} </p> 
         </div>
     </div>
 
@@ -80,6 +80,46 @@
             });
         });
     </script>
+
+    {% comment %} <div class="section">
+        <h3>Your Liked Songs</h3>
+        {% if liked_songs %}
+            <div class="liked-songs-container">
+                {% for song_id, song in liked_songs.items %}
+                    <div class="liked-song">
+                        <img src="{{ song.image_url }}" alt="Song Cover" class="song-img">
+                        <div>
+                            <strong>{{ song.title }}</strong> - {{ song.artist }}<br>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No liked songs found.</p>
+        {% endif %}
+    </div> {% endcomment %}
+    <!-- Liked Songs Section -->
+<div class="section">
+    <h3>Your Liked Songs</h3>
+    {% if liked_songs %}
+        <div class="liked-songs-container">
+            {% for song_id, song in liked_songs.items %}
+                <div class="liked-song">
+                    <img src="{{ song.image_url }}" alt="Song Cover" class="song-img">
+                    <div>
+                        <strong>{{ song.title }}</strong> - {{ song.artist }}<br>
+                    </div>
+                </div>
+                {% if forloop.counter|divisibleby:6 %}
+                    <div class="clear"></div> <!-- Ensures a new row starts after every 6 songs -->
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No liked songs found.</p>
+    {% endif %}
+</div>
+
 
 </body>
 </html>

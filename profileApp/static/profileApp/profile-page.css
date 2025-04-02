@@ -126,132 +126,77 @@ h3 {
     background: #f9f9f9;
 }
 
-/* Make Liked Songs section scrollable */
-.liked {
-    max-height: 200px;
-    overflow-y: auto;
+/* Liked Songs Section */
+.liked-songs-container {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping into multiple rows */
+    gap: 15px;
     padding: 10px;
-    border-radius: 10px;
+    max-height: 400px; /* Makes it vertically scrollable */
+    overflow-y: auto; /* Enables vertical scrolling */
+    justify-content: flex-start;
     background: #f9f9f9;
+    border-radius: 10px;
+    padding: 15px;
 }
 
-.liked div {
-    background: white;
+/* Individual Liked Song */
+.liked-song {
+    flex: 0 0 calc(16.66% - 15px); /* 6 songs per row (100% / 6) */
+    max-width: calc(16.66% - 30px);
+    text-align: center;
     padding: 8px;
-    margin: 5px 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Song Image */
+.liked-song img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Clearfix for new rows */
+.clear {
+    flex-basis: 100%;
+    height: 0;
+}
+
+/* Scrollbar Styling */
+.liked-songs-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.liked-songs-container::-webkit-scrollbar-thumb {
+    background: #ccc;
     border-radius: 5px;
 }
 
+.liked-songs-container::-webkit-scrollbar-track {
+    background: #f9f9f9;
+}
+
 /* Responsive Design */
-@media (max-width: 1200px) {
-    body {
-        font-size: 1rem;
-    }
-
-    .profile-info h2 {
-        font-size: 1.6rem;
-    }
-
-    .profile-info p {
-        font-size: 1.1rem;
-    }
-
-    .song-header {
-        font-size: 1.2rem;
-    }
-
-    .toggle-icon {
-        font-size: 1.1rem;
-    }
-
-    .recommendations {
-        font-size: 1.1rem;
-    }
-
-    .scrollable,
-    .liked {
-        font-size: 1.1rem;
+@media (max-width: 1024px) {
+    .liked-song {
+        flex: 0 0 calc(33.33% - 15px); /* 3 songs per row for tablets */
+        max-width: calc(33.33% - 30px);
     }
 }
 
 @media (max-width: 768px) {
-    .profile-container {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .profile-photo {
-        width: 100px;
-        height: 100px;
-    }
-
-    .profile-info h2 {
-        font-size: 1.5rem;
-    }
-
-    .profile-info p {
-        font-size: 1rem;
-    }
-
-    h3 {
-        font-size: 1.4rem;
-    }
-
-    .song-header {
-        font-size: 1.1rem;
-    }
-
-    .toggle-icon {
-        font-size: 1rem;
-    }
-
-    .recommendations {
-        font-size: 1rem;
-    }
-
-    .scrollable,
-    .liked {
-        font-size: 1rem;
+    .liked-song {
+        flex: 0 0 calc(50% - 15px); /* 2 songs per row for smaller screens */
+        max-width: calc(50% - 30px);
     }
 }
 
 @media (max-width: 480px) {
-    body {
-        font-size: 0.9rem;
-    }
-
-    .profile-photo {
-        width: 90px;
-        height: 90px;
-    }
-
-    .profile-info h2 {
-        font-size: 1.3rem;
-    }
-
-    .profile-info p {
-        font-size: 1rem;
-    }
-
-    h3 {
-        font-size: 1.2rem;
-    }
-
-    .song-header {
-        font-size: 1rem;
-    }
-
-    .toggle-icon {
-        font-size: 0.9rem;
-    }
-
-    .recommendations {
-        font-size: 0.9rem;
-    }
-
-    .scrollable,
-    .liked {
-        font-size: 0.9rem;
+    .liked-song {
+        flex: 0 0 100%; /* 1 song per row for mobile */
+        max-width: 100%;
     }
 }

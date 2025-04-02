@@ -47,7 +47,7 @@ def profilePage(request):
                 }
                 playlist_dict[playlist.playlistID]["songs"].append(song_details)
             except SpotifyException:
-                print(f"Invalid Spotify ID: {song_id}")  # Debugging
+                print(f"recentInvalid Spotify ID: {song_id}")  # Debugging
 
     # Fetch Last 5 Created Playlists
     history_dict = {}
@@ -70,8 +70,28 @@ def profilePage(request):
                 }
                 history_dict[playlist.playlistID]["songs"].append(song_details)
             except SpotifyException:
-                print(f"Invalid Spotify ID: {song_id}")
+                print(f"history----Invalid Spotify ID: {song_id}")
 
-    context = {"playlist_dict": playlist_dict, "history_dict": history_dict,"username":username}
+    # Fetch liked songs list
+    # Fetch liked songs list
+    liked_songs = {}
+
+    for song_id in profile.liked_song_list:
+        if not song_id:  # Skip empty IDs
+            continue
+        try:
+            track = sp.track(song_id)  # Fetch song details from Spotify API
+            liked_songs[song_id] = {
+                "spotify_id": song_id,
+                "title": track["name"],
+                "artist": ", ".join([artist["name"] for artist in track["artists"]]),
+                "image_url": track["album"]["images"][0]["url"] if track["album"]["images"] else "",
+                "preview_url": track.get("preview_url", ""),
+            }
+        except SpotifyException:
+            print(f"liked songs----Invalid Spotify ID: {song_id}")  # Debugging
+
+
+    context = {"playlist_dict": playlist_dict, "history_dict": history_dict,"liked_songs":liked_songs,"username":username}
     return render(request, 'profileApp/profile-page.html', context)
 
