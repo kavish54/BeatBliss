@@ -207,7 +207,7 @@
         <div class="auth">
             {% if request.session.current_user %}
             <a href={% url "login" %}
-                ><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img"
+                ><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvNUHwnizAk7OFnZ5aJMQJq7UZDBONJKvKIg&sg" alt="Profile" class="profile-img"
             /></a>
             {% else %}
                 <a href={% url "login" %}><h3>Login</h3></a>
@@ -220,18 +220,18 @@
     <!-- Hero Section -->
     <section id="hero">
         <div class="hero-content">
-            <h1 class="hero-title">Find the Best Music</h1>
-            <h2 class="hero-subtitle">Personalized Just for You</h2>
-            <p class="hero-text">Explore the world of music genres and recommendations.</p>
+            <h1 class="hero-title">Your Music, Our AI -Perfect Harmony </h1>
+            <h2 class="hero-subtitle">Hit Explore and let AI guide your Music journey! </h2>
+            <!-- <p class="hero-text">.</p> -->
             <button class="explore-btn" onclick="scrollToSection()">Explore</button>
         </div>
     </section>
     
     <!-- Genre Section -->
-    <section class="content-section">
+    <section class="content-section-a">
         
         <div class="image-container">
-          <img src="{% static 'Images/wmremove-transformed.png' %}" alt="Genre">
+          <img src="https://static6.depositphotos.com/1001599/569/i/450/depositphotos_5691496-stock-photo-treble-clef.jpg" alt="Genre">
         </div>
         <div class="text-container">
             <h2>Discover Genres</h2>
@@ -241,14 +241,15 @@
     </section>
 
     <!-- Recommender Section -->
-    <section class="content-section">
-        <div class="image-container">
-            <img src="{% static 'images/recommender.jpg' %}" alt="Recommender">
-        </div>
+    <section class="content-section-b">
+        
         <div class="text-container">
             <h2>Get Recommendations</h2>
             <p>Find songs tailored to your taste based on what you love.</p>
             <a href="/recommender" class="go-btn">Go to Recommender</a>
+        </div>
+        <div class="image-container">
+          <img src="https://img.freepik.com/free-vector/musical-notes-frame-with-text-space_1017-32857.jpg?semt=ais_hybrid" alt="Recommender">
         </div>
     </section>
 
