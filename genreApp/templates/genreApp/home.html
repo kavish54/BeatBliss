@@ -4,210 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Recommendation</title>
+    <title>BeatBliss - Music Recommendation</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'genreApp/home.css' %}">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <style>
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-          font-family: Arial, sans-serif;
-        }
-  
-        body {
-          background-color: #121212;
-          color: white;
-        }
-  
-        .navbar {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 1.5rem 1.5rem;
-          background: #3a6186;  /* fallback for old browsers */
-          background: -webkit-linear-gradient(to right, #89253e, #3a6186);  /* Chrome 10-25, Safari 5.1-6 */
-          background: linear-gradient(to right, #89253e, #3a6186);
-          position: relative;
-        }
-  
-        .left-section {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-        }
-  
-        .logo {
-          display: flex;
-          align-items: center;
-          font-size: 1.5rem;
-          font-weight: bold;
-          color: #ffcc00;
-        }
-  
-        .brand {
-          color: white;
-          text-decoration: none;
-          font-size: 2.125rem;
-          font-weight: bold;
-        }
-  
-        /* Centered Menu */
-        .button-group {
-          position: absolute;
-          left: 50%;
-          transform: translateX(-50%);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background: #2a2a2a;
-          padding: 0.625rem 0.9375rem;
-          border-radius: 0.625rem;
-          gap: 1.25rem;
-          width: auto;
-        }
-  
-        .button-group button {
-          background: transparent;
-          border: none;
-          color: white;
-          font-size: 1rem;
-          cursor: pointer;
-          padding: 0.5rem;
-          text-align: center;
-        }
-  
-        .button-group button a{
-          text-decoration:none;
-          color:white;
-        }
-        .button-group button a:hover{
-          text-decoration:none;
-          color: #ffcc00;
-        }
-  
-        .button-group button:hover {
-          color: #ffcc00;
-        }
-  
-        .auth {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-          margin-left: auto;
-        }
-  
-        .auth a {
-          text-decoration: none;
-          color: white;
-          font-weight: bold;
-        }
-  
-        .profile-img {
-          width: 2.5rem;
-          height: 2.5rem;
-          border-radius: 50%;
-          cursor: pointer;
-        }
-  
-        .hamburger {
-          display: none;
-          flex-direction: column;
-          cursor: pointer;
-          gap: 0.3125rem;
-        }
-  
-        .hamburger div {
-          width: 1.875rem;
-          height: 0.1875rem;
-          background-color: white;
-        }
-        
-        .nav-button{
-            text-decoration:none;
-        }
-  
-        /* Mobile Styles */
-        @media (max-width: 48rem) {
-          .navbar {
-            justify-content: space-between;
-            flex-wrap: wrap;
-          }
-  
-          .hamburger {
-            display: flex;
-          }
-  
-          .left-section {
-            display: flex;
-            align-items: center;
-          }
-  
-          .button-group {
-            display: none;
-            flex-direction: column;
-            align-items: flex-start;
-            background: #2a2a2a;
-            position: absolute;
-            top: 100%;
-            left: 12%; /* Align to the start */
-            width: auto;
-            padding: 0.625rem 1rem;
-            border-radius: 0.625rem;
-            text-align: left;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-          }
-  
-          .button-group.active {
-            display: flex;
-          }
-  
-          .button-group button {
-            padding: 0.75rem;
-            font-size: 1.1rem;
-            width: 100%;
-            border-bottom: 0.0625rem solid #444;
-          }
-        }
-      </style>
 </head>
-<body>
-    {% comment %} <nav>
-        <div class="logo">BeatBliss</div>
-        <ul>
-            <li><a href={% url "genreHome" %}>Home</a></li>
-            <li><a href={% url "recHome" %}>Recommender</a></li>
+<body class="body-color">
+    <!-- Mobile menu overlay -->
+    <div class="menu-overlay" onclick="toggleMenu()"></div>
 
-            {% if request.session.current_user %}
-                <li><a href={% url "profile-page" %}> {{ request.session.current_user }} </a></li>
-            {% else %}
-                <li><a href={% url "login" %}>Login</a></li>
-            {% endif %}
-        </ul>
-    </nav> {% endcomment %}
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="left-section">
-          <div class="hamburger" onclick="toggleMenu()">
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-          <div class="logo">
-            <span>⚡</span>
-            <a href="#" class="brand">BeatBliss</a>
-          </div>
+            <div class="logo">
+                <span>♫</span>
+                <a href="#" class="brand">BeatBliss</a>
+            </div>
         </div>
-  
+    
         <div class="button-group">
-          <button><a class='nav-button' href={% url "genreHome" %}>Home</a></button>
-          <button><a class='nav-button' href={% url "recHome" %}>Recommender</a></button>
-          <button><a class='nav-button' href='#'>About us</a></button>
+            <button><a class="nav-link" href={% url "home" %}>Home</a></button>
+            <button><a class="nav-link" href={% url "genreHome" %}>Genre</a></button>
+            <button><a class="nav-link" href={% url "recHome" %}>Recommender</a></button>
+            <button><a class="nav-link" href="#">About</a></button>
         </div>
-  
+    
         <div class="auth">
             {% if request.session.current_user %}
-            <a href={% url "login" %}
-                ><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvNUHwnizAk7OFnZ5aJMQJq7UZDBONJKvKIg&sg" alt="Profile" class="profile-img"
+            <a href={% url "profile-page" %}
+                ><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img"
             /></a>
             {% else %}
                 <a href={% url "login" %}><h3>Login</h3></a>
@@ -215,67 +39,27 @@
         </div>
     </nav>
 
-    <!-- Navigation Bar (Your Existing Code) -->
-
     <!-- Hero Section -->
-    <!-- Hero Section -->
-<section id="hero">
-  <div class="hero-content">
-      <h1 class="hero-title">Your Music, Our AI -Perfect Harmony </h1>
-      <h2 class="hero-subtitle">Hit Explore and let AI guide your Music journey! </h2>
-      <!-- <p class="hero-text">.</p> -->
-      <button class="explore-btn" onclick="scrollToSection()">Explore</button>
-  </div>
-
-  <style>
-      /* Hero Section with Roundlight Effect */
-      #hero {
-          position: relative;
-          text-align: center;
-          padding: 140px 20px;
-          height: 100vh;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          /* Match body background for seamless transition */
-          background: #3a6186;  /* fallback for old browsers */
-          background: -webkit-linear-gradient(to right, #89253e, #3a6186);  /* Chrome 10-25, Safari 5.1-6 */
-          background: linear-gradient(to right, #89253e, #3a6186);
-          overflow: hidden;
-      }
-
-      /* Add roundlight effect */
-      #hero::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: radial-gradient(circle at center, 
-                      rgba(255, 204, 0, 0.15) 0%, 
-                      rgba(255, 133, 162, 0.15) 50%, 
-                      rgba(58, 97, 134, 0) 70%);
-          z-index: 0;
-      }
-
-      .hero-content {
-          position: relative;
-          z-index: 1;
-          max-width: 1200px;
-          margin: 0 auto;
-      }
-  </style>
-</section>
+    <section id="hero">
+        <div class="hero-content">
+            <div class="music-visualizer">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <h1 class="hero-title">Your Music, Our AI - Perfect Harmony</h1>
+            <h2 class="hero-subtitle">Hit Explore and let AI guide your Music journey!</h2>
+            <button class="explore-btn" onclick="scrollToSection()">Explore</button>
+        </div>
+    </section>
     
     <!-- Genre Section -->
     <section class="content-section-a">
-        
         <div class="image-container">
-          {% comment %} <img src="https://static6.depositphotos.com/1001599/569/i/450/depositphotos_5691496-stock-photo-treble-clef.jpg" alt="Genre"> {% endcomment %}
-          <img src="https://img.freepik.com/free-photo/digital-art-portrait-person-listening-music-headphones_23-2151065050.jpg?t=st=1743660617~exp=1743664217~hmac=c3868a9192113063e5eb28c0321c7f1060aaf167f2b5845ae63e00aec6141b54&w=740" alt="Genre">
-          
+            <img src="https://img.freepik.com/free-photo/digital-art-portrait-person-listening-music-headphones_23-2151065050.jpg?t=st=1743660617~exp=1743664217~hmac=c3868a9192113063e5eb28c0321c7f1060aaf167f2b5845ae63e00aec6141b54&w=740" alt="Genre">
         </div>
         <div class="text-container">
             <h2>Discover Genres</h2>
@@ -286,7 +70,6 @@
 
     <!-- Recommender Section -->
     <section class="content-section-b">
-        
         <div class="text-container">
             <h2>Get Personalized Recommendations</h2>
             <p>Get personalized music recommendations based on your favorite tracks. 
@@ -295,24 +78,82 @@
             <a href="/recommender" class="go-btn">Go to Recommender</a>
         </div>
         <div class="image-container">
-          <img src="https://img.freepik.com/free-vector/musical-notes-frame-with-text-space_1017-32857.jpg?semt=ais_hybrid" alt="Recommender">
+            <img src="{% static 'genreApp/images/recimage.png' %}" alt="Recommender">
         </div>
     </section>
 
-    <!-- Social Media Links -->
-    <footer>
-        <p>Follow us:</p>
-        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
-        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <div class="footer-logo">
+                    <span>♫</span>
+                    <a href="#">BeatBliss</a>
+                </div>
+                <p>Discover and classify music genres with our advanced AI technology.</p>
+                <p>Perfect for artists, producers, and music enthusiasts.</p>
+                <div class="social-links">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-spotify"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href={% url "home" %}><i class="fas fa-chevron-right"></i> Home</a></li>
+                    <li><a href={% url "genreHome" %}><i class="fas fa-chevron-right"></i> Genre</a></li>
+                    <li><a href={% url "recHome" %}><i class="fas fa-chevron-right"></i> Recommender</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> About</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2025 BeatBliss. All rights reserved.</p>
+        </div>
     </footer>
 
     <script>
         function scrollToSection() {
-            document.querySelector(".content-section").scrollIntoView({ behavior: "smooth" });
+            document.querySelector(".content-section-a").scrollIntoView({ behavior: "smooth" });
         }
+        
+        function toggleMenu() {
+            const buttonGroup = document.querySelector('.button-group');
+            const hamburger = document.querySelector('.hamburger');
+            const menuOverlay = document.querySelector('.menu-overlay');
+            
+            buttonGroup.classList.toggle('active');
+            hamburger.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+            
+            // Prevent scrolling when menu is open
+            if (buttonGroup.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hamburger menu element if not already in HTML
+            if (!document.querySelector('.hamburger')) {
+                const navbar = document.querySelector('.navbar');
+                const hamburger = document.createElement('div');
+                hamburger.className = 'hamburger';
+                
+                for (let i = 0; i < 3; i++) {
+                    const bar = document.createElement('div');
+                    hamburger.appendChild(bar);
+                }
+                
+                hamburger.addEventListener('click', toggleMenu);
+                navbar.appendChild(hamburger);
+            }
+        });
     </script>
-
 </body>
-</html> 
+</html>
