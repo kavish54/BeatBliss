@@ -123,3 +123,7 @@ input {
 #SignUp-button a:hover {
     color: #7b5dfb; /* Change color on hover */
 }
+
+#ForgotPassword-button a:hover {
+    color: #7b5dfb; /* Change color on hover */
+}

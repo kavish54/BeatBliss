@@ -185,7 +185,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib import messages
 
 # Abstract API Key (Replace with your own API Key)
-API_KEY = "f5e8fa9261d5493a8c8880327336d18e"  # Get from Abstract API
+# API_KEY = "f5e8fa9261d5493a8c8880327336d18e"  # Get from Abstract API
+API_KEY = "085c5f92f5a84cbf8c23a35e08220dbc"  # Get from Abstract API
 
 # Email verification view
 def verify_real_email(request):
@@ -286,28 +287,49 @@ def password_reset_view(request):
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model,update_session_auth_hash
 from django.contrib.auth.forms import SetPasswordForm
+from django.utils.encoding import force_str  # Use force_str for Django 4+
+
+# def password_reset_confirm_view(request, uidb64, token):
+#     try:
+#         uid = force_str(urlsafe_base64_decode(uidb64))
+#         user = get_user_model().objects.get(pk=uid)
+#     except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
+#         user = None
+
+#     if user and default_token_generator.check_token(user, token):
+#         if request.method == "POST":
+#             form = SetPasswordForm(user, request.POST)
+#             if form.is_valid():
+#                 form.save()
+#                 messages.success(request, "✅ Your password has been successfully reset!")
+#                 return redirect("login")
+#         else:
+#             form = SetPasswordForm(user)
+#         return render(request, "loginApp/password_reset_confirm.html", {"form": form})
+#     else:
+#         messages.error(request, "❌ The password reset link is invalid or has expired.")
+#         return redirect("password_reset")
 
 def password_reset_confirm_view(request, uidb64, token):
     try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
+        uid = force_str(urlsafe_base64_decode(uidb64))  # Decode user ID
         user = get_user_model().objects.get(pk=uid)
     except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
         user = None
 
-    if user and default_token_generator.check_token(user, token):
+    if user and default_token_generator.check_token(user, token):  # Validate token
         if request.method == "POST":
             form = SetPasswordForm(user, request.POST)
             if form.is_valid():
-                form.save()
+                form.save()  # Update password
+                update_session_auth_hash(request, user)  # Keep user session active
                 messages.success(request, "✅ Your password has been successfully reset!")
-                return redirect("login")
+                return redirect("login")  # Redirect to login page
         else:
             form = SetPasswordForm(user)
         return render(request, "loginApp/password_reset_confirm.html", {"form": form})
     else:
         messages.error(request, "❌ The password reset link is invalid or has expired.")
         return redirect("password_reset")
-    
-    
