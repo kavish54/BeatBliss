@@ -44,3 +44,6 @@ def genreHome(request):
     else:
         form = UploadSongForm()
     return render(request,'genreApp/genre-home.html',context)
+
+def home(request):
+    return render(request,'genreApp/home.html')
