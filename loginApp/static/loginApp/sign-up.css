@@ -49,6 +49,9 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start; /* Align the content to the top */
+    margin-top: 4rem;
+    width: 60%;
+    padding: 40px;
 }
 
 .input-group {
@@ -109,3 +112,8 @@ p {
     text-align: center;
     margin-top: 20px;
 }
+
+
+    #SignInButton a:hover {
+        color: #7b5dfb; /* Change color on hover */
+    }

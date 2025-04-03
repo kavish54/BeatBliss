@@ -207,7 +207,7 @@
         <div class="auth">
             {% if request.session.current_user %}
             <a href={% url "login" %}
-                ><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img"
+                ><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvNUHwnizAk7OFnZ5aJMQJq7UZDBONJKvKIg&sg" alt="Profile" class="profile-img"
             /></a>
             {% else %}
                 <a href={% url "login" %}><h3>Login</h3></a>
@@ -218,37 +218,84 @@
     <!-- Navigation Bar (Your Existing Code) -->
 
     <!-- Hero Section -->
-    <section id="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">Find the Best Music</h1>
-            <h2 class="hero-subtitle">Personalized Just for You</h2>
-            <p class="hero-text">Explore the world of music genres and recommendations.</p>
-            <button class="explore-btn" onclick="scrollToSection()">Explore</button>
-        </div>
-    </section>
+    <!-- Hero Section -->
+<section id="hero">
+  <div class="hero-content">
+      <h1 class="hero-title">Your Music, Our AI -Perfect Harmony </h1>
+      <h2 class="hero-subtitle">Hit Explore and let AI guide your Music journey! </h2>
+      <!-- <p class="hero-text">.</p> -->
+      <button class="explore-btn" onclick="scrollToSection()">Explore</button>
+  </div>
+
+  <style>
+      /* Hero Section with Roundlight Effect */
+      #hero {
+          position: relative;
+          text-align: center;
+          padding: 140px 20px;
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          /* Match body background for seamless transition */
+          background: #3a6186;  /* fallback for old browsers */
+          background: -webkit-linear-gradient(to right, #89253e, #3a6186);  /* Chrome 10-25, Safari 5.1-6 */
+          background: linear-gradient(to right, #89253e, #3a6186);
+          overflow: hidden;
+      }
+
+      /* Add roundlight effect */
+      #hero::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: radial-gradient(circle at center, 
+                      rgba(255, 204, 0, 0.15) 0%, 
+                      rgba(255, 133, 162, 0.15) 50%, 
+                      rgba(58, 97, 134, 0) 70%);
+          z-index: 0;
+      }
+
+      .hero-content {
+          position: relative;
+          z-index: 1;
+          max-width: 1200px;
+          margin: 0 auto;
+      }
+  </style>
+</section>
     
     <!-- Genre Section -->
-    <section class="content-section">
+    <section class="content-section-a">
         
         <div class="image-container">
-          <img src="{% static 'Images/wmremove-transformed.png' %}" alt="Genre">
+          {% comment %} <img src="https://static6.depositphotos.com/1001599/569/i/450/depositphotos_5691496-stock-photo-treble-clef.jpg" alt="Genre"> {% endcomment %}
+          <img src="https://img.freepik.com/free-photo/digital-art-portrait-person-listening-music-headphones_23-2151065050.jpg?t=st=1743660617~exp=1743664217~hmac=c3868a9192113063e5eb28c0321c7f1060aaf167f2b5845ae63e00aec6141b54&w=740" alt="Genre">
+          
         </div>
         <div class="text-container">
             <h2>Discover Genres</h2>
-            <p>Explore various music genres and find the one that matches your vibe.</p>
+            <p>Ever Wondered What Genre Your Song Belongs To? Find Out Now!</p>
             <a href="/genre" class="go-btn">Go to Genre</a>
         </div>
     </section>
 
     <!-- Recommender Section -->
-    <section class="content-section">
-        <div class="image-container">
-            <img src="{% static 'images/recommender.jpg' %}" alt="Recommender">
-        </div>
+    <section class="content-section-b">
+        
         <div class="text-container">
-            <h2>Get Recommendations</h2>
-            <p>Find songs tailored to your taste based on what you love.</p>
+            <h2>Get Personalized Recommendations</h2>
+            <p>Get personalized music recommendations based on your favorite tracks. 
+              Simply search for a song, explore similar suggestions, and save your favorites directly to Spotify. 
+            </p>
             <a href="/recommender" class="go-btn">Go to Recommender</a>
+        </div>
+        <div class="image-container">
+          <img src="https://img.freepik.com/free-vector/musical-notes-frame-with-text-space_1017-32857.jpg?semt=ais_hybrid" alt="Recommender">
         </div>
     </section>
 
@@ -268,4 +315,4 @@
     </script>
 
 </body>
-</html>
+</html> 

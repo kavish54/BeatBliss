@@ -10,9 +10,7 @@ User = get_user_model()
 def genreHome(request):
     current_user = request.session.get('current_user')
     print(current_user)
-    context = {
-        "current_user" : current_user
-    }
+    
     if request.method == "POST":
         print("njadbaksjdbkasjdbajksbd")
         form = UploadSongForm(request.POST, request.FILES)
@@ -43,7 +41,12 @@ def genreHome(request):
 
     else:
         form = UploadSongForm()
-    return render(request,'genreApp/genre-home.html',context)
+    
+    context = {
+        "current_user": current_user,
+        "form": form  # Add the form to the context
+    }
+    return render(request,'genreApp/genre-home.html', context)
 
 def home(request):
     return render(request,'genreApp/home.html')
