@@ -9,25 +9,22 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+    <div class="menu-overlay" onclick="toggleMenu()"></div>
     <nav class="navbar">
         <div class="left-section">
-          <div class="hamburger" onclick="toggleMenu()">
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-          <div class="logo">
-            <span>⚡</span>
-            <a href="#" class="brand">BeatBliss</a>
-          </div>
+            <div class="logo">
+                <span>♫</span>
+                <a href="#" class="brand">BeatBliss</a>
+            </div>
         </div>
-  
+    
         <div class="button-group">
-          <button><a class='nav-button' href={% url "genreHome" %}>Home</a></button>
-          <button><a class='nav-button' href={% url "recHome" %}>Recommender</a></button>
-          <button><a class='nav-button' href='#'>About us</a></button>
+            <button><a class="nav-link" href={% url "home" %}>Home</a></button>
+            <button><a class="nav-link" href={% url "genreHome" %}>Genre</a></button>
+            <button><a class="nav-link" href={% url "recHome" %}>Recommender</a></button>
+            <button><a class="nav-link" href="#">About</a></button>
         </div>
-  
+    
         <div class="auth">
             {% if request.session.current_user %}
             <a href={% url "profile-page" %}
@@ -38,7 +35,6 @@
             {% endif %}
         </div>
     </nav>
-
     <!-- Profile Section -->
     <div class="profile-container">
         <img src="https://media.istockphoto.com/id/1403500817/photo/the-craggies-in-the-blue-ridge-mountains.jpg?s=612x612&w=0&k=20&c=N-pGA8OClRVDzRfj_9AqANnOaDS3devZWwrQNwZuDSk=" alt="Profile Photo" class="profile-photo">
@@ -155,6 +151,40 @@
     {% endif %}
 </div>
 <script>
+    function toggleMenu() {
+        const navLinks = document.querySelector('.nav-links');
+        const hamburger = document.querySelector('.hamburger');
+        const menuOverlay = document.querySelector('.menu-overlay');
+        const buttonGroup = document.querySelector('.button-group');
+        
+        buttonGroup.classList.toggle('active');
+        hamburger.classList.toggle('active');
+        menuOverlay.classList.toggle('active');
+        
+        // Prevent scrolling when menu is open
+        if (buttonGroup.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add hamburger menu element if not already in HTML
+        if (!document.querySelector('.hamburger')) {
+            const navbar = document.querySelector('.navbar');
+            const hamburger = document.createElement('div');
+            hamburger.className = 'hamburger';
+            
+            for (let i = 0; i < 3; i++) {
+                const bar = document.createElement('div');
+                hamburger.appendChild(bar);
+            }
+            
+            hamburger.addEventListener('click', toggleMenu);
+            navbar.appendChild(hamburger);
+        }
+    });
     function likeSong(songId) {
         fetch("/like-song/", {
             method: "POST",

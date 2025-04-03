@@ -1,382 +1,576 @@
 /* General Styles */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0px;
-    background: #bdc3c7;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #2c3e50, #bdc3c7);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #2c3e50, #bdc3c7);
-    font-size: 1rem;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
 }
 
-/* Profile Section */
+body {
+  margin: 0;
+  background: #121212;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Navbar - Keep as is from your provided CSS */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 3rem;
+  /* background: rgba(18, 18, 18, 0.95); */
+  background: #18181B;
+  position: sticky;
+  top: 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo span {
+  font-size: 2rem;
+  color: #FF6584;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.brand {
+  color: white;
+  text-decoration: none;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  background: linear-gradient(to right, #FF6584, #7B68EE);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.3s ease;
+}
+
+.brand:hover {
+  transform: scale(1.02);
+  letter-spacing: 1px;
+}
+
+/* Button Group - Center Nav */
+.button-group {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(30, 30, 30, 0.6);
+  padding: 0.625rem 0.9375rem;
+  border-radius: 0.625rem;
+  gap: 1.25rem;
+  width: auto;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.button-group button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #a1a1aa;
+  font-weight: 500;
+  font-size: 1.1rem;
+  position: relative;
+  padding: 0.5rem 0.25rem;
+  transition: all 0.3s ease;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(to right, #FF6584, #7B68EE);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #FF6584;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.nav-button {
+  text-decoration: none;
+  color: #A1A1AA;
+  font-weight: 500;
+  font-size: 1.1rem;
+  position: relative;
+  padding: 0.5rem 0.25rem;
+  transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+  color: #FF6584;
+}
+
+.button-group button:hover .nav-button::after {
+  width: 100%;
+}
+
+/* Auth Section */
+.auth {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.auth h3 {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.auth h3:hover {
+  color: #FF6584;
+}
+
+.profile-img {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #FF6584;
+  padding: 2px;
+  transition: all 0.3s ease;
+  object-fit: cover;
+}
+
+.profile-img:hover {
+  transform: scale(1.1);
+  border-color: #7B68EE;
+}
+
+/* Hamburger Menu */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 0.3rem;
+  z-index: 100;
+}
+
+.hamburger div {
+  width: 2rem;
+  height: 0.175rem;
+  background: linear-gradient(to right, #FF6584, #7B68EE);
+  transition: all 0.3s ease;
+  border-radius: 5px;
+}
+
+/* Profile Page Specific Styles */
 .profile-container {
-    display: flex;
-    align-items: center;
-    background: #bdc3c7;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #2c3e50, #bdc3c7);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #2c3e50, #bdc3c7); 
-    padding: 15px;
-    margin-top: 0;
-    margin-bottom: 30px;
-    margin-left: 0;
-    margin-right: 0;
-    border-radius: 0px;
-    border-bottom: #1a1a1a;
-    /* box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); */
-    height: 300px;
-    
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 2rem;
+  background: #161616;
+  position: relative;
+  text-align: center;
 }
 
 .profile-photo {
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 50px;
-    margin-left: 50px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid transparent;
+  background: linear-gradient(#161616, #161616) padding-box,
+              linear-gradient(to right, #FF6584, #7B68EE) border-box;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.profile-photo:hover {
+  transform: scale(1.05);
+}
+
+.profile-info {
+  text-align: center;
 }
 
 .profile-info h2 {
-    margin: 0;
-    font-size: 3.8rem;
-    color: white;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(to right, #FF6584, #7B68EE);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .profile-info p {
-    margin: 5px 0;
-    color: #bdc3c7;
-    font-size: 2.2rem;
+  font-size: 1.1rem;
+  color: #b3b3b3;
 }
 
-/* Sections */
+/* Section Styles */
 .section {
-    background: #3a6186;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #89253e, #3a6186);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #89253e, #3a6186); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
-    padding: 15px;
-    border-radius: 10px;
-    margin: 30px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 2rem 3rem;
+  background: #121212;
+  margin-bottom: 2rem;
 }
 
-h3 {
-    margin: 0 0 10px 0;
-    font-size: 1.6rem;
-    color: white;
+.section h3 {
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(to right, #FF6584, #7B68EE);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  position: relative;
 }
 
-/* Playlist Box */
+.section h3::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(to right, #FF6584, #7B68EE);
+  border-radius: 3px;
+}
+
+/* Song Box Styles */
 .song-box {
-    background: #EECDA3;  
-    background: -webkit-linear-gradient(to right, #EF629F, #EECDA3);  
-    background: linear-gradient(to right, #EF629F, #EECDA3); 
-
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  background: rgba(30, 30, 30, 0.6);
+  border-radius: 15px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Playlist Header - Clickable but Without Border */
+.song-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(123, 104, 238, 0.2);
+}
+
 .song-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 15px;
-    background: #EECDA3;  
-    background: -webkit-linear-gradient(to right, #EF629F, #EECDA3);  
-    background: linear-gradient(to right, #EF629F, #EECDA3);
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: rgba(18, 18, 18, 0.8);
+  cursor: pointer;
 }
 
-.song-header:hover {
-    background: #EECDA3;  
-    background: -webkit-linear-gradient(to right, #EF629F, #EECDA3);  
-    background: linear-gradient(to left, #EF629F, #EECDA3);
+.song-header span {
+  font-weight: 600;
+  color: #FF6584;
 }
 
-/* Toggle Icon */
 .toggle-icon {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2rem;
-    padding: 5px;
-    color: #666;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
 }
 
-/* Recommendations Section */
 .recommendations {
-    display: none;
-    padding: 10px;
-    /* border-left: 2px solid #ddd; */
-    margin-top: 5px;
-    border-radius: 5px;
-    background: #EECDA3;  
-    background: -webkit-linear-gradient(to right, #EF629F, #EECDA3);  
-    background: linear-gradient(to right, #EF629F, #EECDA3);
+  padding: 1.5rem;
+  display: none;
 }
 
-/* Individual Song */
-.recommendations .song {
-    display: flex;
-    align-items: center;
-    padding: 8px;
-    background: #EECDA3;  
-    background: -webkit-linear-gradient(to right, #EF629F, #EECDA3);  
-    background: linear-gradient(to left, #EF629F, #EECDA3);
-    margin: 0px 0;
-    border-radius: 5px;
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
-    margin-bottom: 5px;
+/* Song Item Styles */
+.song {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 10px;
+  background: rgba(18, 18, 18, 0.5);
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
 }
 
-/* Song Image */
+.song:hover {
+  background: rgba(30, 30, 30, 0.8);
+  transform: translateX(5px);
+}
+
 .song-img {
-    width: 50px;
-    height: 50px;
-    border-radius: 5px;
-    object-fit: cover;
-    margin-right: 10px;
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-right: 1rem;
+  border: 2px solid transparent;
+  background: linear-gradient(rgba(18, 18, 18, 0.5), rgba(18, 18, 18, 0.5)) padding-box,
+              linear-gradient(to right, #FF6584, #7B68EE) border-box;
 }
 
-/* Scrollable Sections */
-.scrollable {
-    max-height: 200px;
-    overflow-y: auto;
-    padding: 10px;
-    border-radius: 10px;
-    background: #f9f9f9;
+.song div {
+  flex: 1;
 }
 
-/* Liked Songs Section */
+.song strong {
+  color: white;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.like-button {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: white;
+  transition: all 0.3s ease;
+  margin-left: 1rem;
+  padding: 0.5rem;
+  border-radius: 50%;
+}
+
+.like-button:hover {
+  transform: scale(1.2);
+  color: #FF6584;
+}
+
+/* Like button at the top of playlist */
+.recommendations > .like-button {
+  background: linear-gradient(45deg, #FF6584, #7B68EE);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin: 0 0 1rem 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 101, 132, 0.2);
+  display: block;
+  width: max-content;
+}
+
+.recommendations > .like-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(255, 101, 132, 0.4);
+}
+
+/* Liked Songs Grid */
 .liked-songs-container {
-    display: flex;
-    flex-wrap: wrap; /* Allows wrapping into multiple rows */
-    gap: 15px;
-    padding: 10px;
-    max-height: 400px; /* Makes it vertically scrollable */
-    overflow-y: auto; /* Enables vertical scrolling */
-    justify-content: flex-start;
-    background: #3a6186;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #89253e, #3a6186);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #89253e, #3a6186);
-    border-radius: 10px;
-    padding: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
 }
 
-/* Individual Liked Song */
 .liked-song {
-    flex: 0 0 calc(16.66% - 15px); /* 6 songs per row (100% / 6) */
-    max-width: calc(16.66% - 30px);
-    text-align: center;
-    padding: 8px;
-    background: #EECDA3;  
-    background: -webkit-linear-gradient(to right, #EF629F, #EECDA3);  
-    background: linear-gradient(to left, #EF629F, #EECDA3);
-    border-radius: 8px;
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  background: rgba(30, 30, 30, 0.6);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
 }
 
-/* Song Image */
-.liked-song img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 8px;
+.liked-song:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 25px rgba(123, 104, 238, 0.3);
 }
 
-/* Clearfix for new rows */
+.liked-song .song-img {
+  width: 100%;
+  height: 180px;
+  border-radius: 12px 12px 0 0;
+  margin-right: 0;
+  border: none;
+}
+
+.liked-song div {
+  padding: 1rem;
+}
+
+.liked-song strong {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
 .clear {
-    flex-basis: 100%;
-    height: 0;
+  clear: both;
 }
 
-/* Scrollbar Styling */
-.liked-songs-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.liked-songs-container::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 5px;
-}
-
-.liked-songs-container::-webkit-scrollbar-track {
-    background: #f9f9f9;
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-    .liked-song {
-        flex: 0 0 calc(33.33% - 15px); /* 3 songs per row for tablets */
-        max-width: calc(33.33% - 30px);
-    }
-}
-
-@media (max-width: 768px) {
-    .liked-song {
-        flex: 0 0 calc(50% - 15px); /* 2 songs per row for smaller screens */
-        max-width: calc(50% - 30px);
-    }
-}
-
-@media (max-width: 480px) {
-    .liked-song {
-        flex: 0 0 100%; /* 1 song per row for mobile */
-        max-width: 100%;
-    }
-}
-
+/* Mobile Responsive */
+@media (max-width: 992px) {
   .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem 1.5rem;
-    background-color: #1a1a1a;
-    position: relative;
+    padding: 1.25rem 2rem;
   }
 
-  .left-section {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #ffcc00;
-  }
-
-  .brand {
-    color: white;
-    text-decoration: none;
-    font-size: 2.125rem;
-    font-weight: bold;
-  }
-
-  /* Centered Menu */
-  .button-group {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
+  .nav-links {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 70%;
+    max-width: 300px;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
-    background: #2a2a2a;
-    padding: 0.625rem 0.9375rem;
-    border-radius: 0.625rem;
-    gap: 1.25rem;
-    width: auto;
+    gap: 2.5rem;
+    background: rgba(18, 18, 18, 0.98);
+    backdrop-filter: blur(10px);
+    padding: 2rem;
+    transform: translateX(100%);
+    transition: transform 0.4s ease;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
   }
 
-  .button-group button {
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 1rem;
-    cursor: pointer;
-    padding: 0.5rem;
-    text-align: center;
-  }
-
-  .button-group button a{
-    text-decoration:none;
-    color:white;
-  }
-  .button-group button a:hover{
-    text-decoration:none;
-    color: #ffcc00;
-  }
-
-  .button-group button:hover {
-    color: #ffcc00;
-  }
-
-  .auth {
+  .nav-links.active {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-left: auto;
+    transform: translateX(0);
   }
 
-  .auth a {
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
-  }
-
-  .profile-img {
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    cursor: pointer;
-  }
 
   .hamburger {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    gap: 0.3125rem;
+    display: flex;
   }
 
-  .hamburger div {
-    width: 1.875rem;
-    height: 0.1875rem;
-    background-color: white;
+  .button-group {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 70%;
+    max-width: 300px;
+    flex-direction: column;
+    justify-content: center;
+    background: rgba(18, 18, 18, 0.98);
+    backdrop-filter: blur(10px);
+    padding: 2rem;
+    transform: translateX(100%);
+    transition: transform 0.4s ease;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+    left: auto;
   }
   
-  .nav-button{
-      text-decoration:none;
+  .button-group.active {
+    display: flex;
+    transform: translateX(0);
+  }
+  
+  .button-group button {
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    width: 100%;
+    border-bottom: 0.0625rem solid #444;
   }
 
-  /* Mobile Styles */
-  @media (max-width: 48rem) {
-    .navbar {
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-
-    .hamburger {
-      display: flex;
-    }
-
-    .left-section {
-      display: flex;
-      align-items: center;
-    }
-
-    .button-group {
-      display: none;
-      flex-direction: column;
-      align-items: flex-start;
-      background: #2a2a2a;
-      position: absolute;
-      top: 100%;
-      left: 12%; /* Align to the start */
-      width: auto;
-      padding: 0.625rem 1rem;
-      border-radius: 0.625rem;
-      text-align: left;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-    }
-
-    .button-group.active {
-      display: flex;
-    }
-
-    .button-group button {
-      padding: 0.75rem;
-      font-size: 1.1rem;
-      width: 100%;
-      border-bottom: 0.0625rem solid #444;
-    }
+  .section {
+    padding: 2rem 1.5rem;
   }
+  
+  .liked-songs-container {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+  
+  .liked-song .song-img {
+    height: 140px;
+  }
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    padding: 1rem 1.5rem;
+  }
+  
+  .brand {
+    font-size: 1.75rem;
+  }
+  
+  .profile-container {
+    padding: 2rem 1rem;
+  }
+  
+  .profile-photo {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .section {
+    padding: 1.5rem 1rem;
+  }
+  
+  .liked-songs-container {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+  
+  .liked-song .song-img {
+    height: 120px;
+  }
+  
+  .song {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .song-img {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+  
+  .like-button {
+    margin-top: 1rem;
+    margin-left: 0;
+  }
+}
+
+/* Add this to make the toggle work visually */
+.toggle-btn.active .toggle-icon {
+  transform: rotate(180deg);
+}
