@@ -18,17 +18,17 @@ from recommApp.utils.recomFinder import load_knn_model, recommend_songs, train_a
 import json
 from django.http import JsonResponse
 
-os.environ['SPOTIPY_CLIENT_ID'] = 'cfd82609829c4df08e69069c5c37e201'
-os.environ['SPOTIPY_CLIENT_SECRET'] = '0cc553a74abf4a328b0cd70a661fd01f'
+os.environ['SPOTIPY_CLIENT_ID'] = '7d014370fbc24589848407b92579c6e7'
+os.environ['SPOTIPY_CLIENT_SECRET'] = '2e0b934440ab44eab116a6b87e7ac3cf'
 os.environ['SPOTIPY_REDIRECT_URI'] = 'http://127.0.0.1:8000/callback'
 
 # Create your views here.
 
 sp = spotipy.Spotify(
     auth_manager=SpotifyClientCredentials(
-        client_id='cfd82609829c4df08e69069c5c37e201',
-        client_secret='0cc553a74abf4a328b0cd70a661fd01f'
-    )
+        client_id='7d014370fbc24589848407b92579c6e7',
+        client_secret='2e0b934440ab44eab116a6b87e7ac3cf'
+    )   
 )
 
 def recomHome(request):
@@ -137,7 +137,6 @@ def show_recommendations(request,sid):
     if nn_model is None:
         nn_model, feature_matrix = train_and_save_knn_model(merged_df)
 
-    # song_name = "The Middle" 
     recommendations = recommend_songs(sid, merged_df, nn_model, feature_matrix, 5)
 
     track = sp.track(sid)
@@ -147,8 +146,10 @@ def show_recommendations(request,sid):
         "artist": ", ".join(artist['name'] for artist in track['artists']),
         "album": track['album']['name'],
         "image": track['album']['images'][0]['url'] if track['album']['images'] else "",
-        "spotify_url": track['external_urls']['spotify']
+        "spotify_url": track['external_urls']['spotify'],
+        "preview_url": track['preview_url']
     })
+    print(current_song["preview_url"])
     suggested = []
     song_details = []
     for song in recommendations:
@@ -160,7 +161,8 @@ def show_recommendations(request,sid):
             "artist": ", ".join(artist['name'] for artist in track['artists']),
             "album": track['album']['name'],
             "image": track['album']['images'][0]['url'] if track['album']['images'] else "",
-            "spotify_url": track['external_urls']['spotify']
+            "spotify_url": track['external_urls']['spotify'],
+            "preview_url": track['preview_url']  # Added preview URL
         })
         suggested.append(song["song_id"])
 
