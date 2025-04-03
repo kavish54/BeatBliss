@@ -15,19 +15,19 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="left-section">
-          <div class="logo">
-            <span>♫</span>
-            <a href="#" class="brand">BeatBliss</a>
-          </div>
+            <div class="logo">
+                <span>♫</span>
+                <a href="#" class="brand">BeatBliss</a>
+            </div>
         </div>
-  
-        <div class="nav-links">
-          <a href="genreHome" class="nav-link">Home</a>
-          <a href="recHome" class="nav-link">Recommender</a>
-          <a href="#" class="nav-link">Discover</a>
-          <a href="#" class="nav-link">About</a>
+    
+        <div class="button-group">
+            <button><a class="nav-link" href={% url "home" %}>Home</a></button>
+            <button><a class="nav-link" href={% url "genreHome" %}>Genre</a></button>
+            <button><a class="nav-link" href={% url "recHome" %}>Recommender</a></button>
+            <button><a class="nav-link" href="#">About</a></button>
         </div>
-  
+    
         <div class="auth">
             {% if request.session.current_user %}
             <a href={% url "profile-page" %}
@@ -57,70 +57,120 @@
 
     <!-- Upload Section -->
     <div class="upload-section">
-      <div class="upload-container">
-          <h2>Upload Your Track</h2>
-          <form action="" method="POST" enctype="multipart/form-data">
-              {% csrf_token %}
-              
-              <div class="file-upload-wrapper">
-                  <label for="file-upload" class="custom-file-upload">
-                      <i class="fas fa-cloud-upload-alt"></i>
-                      <p>Drag your audio file here</p>
-                      <span>or click to browse</span>
-                  </label>
-                  {{ form.file }}
-                  <div class="filename-display" id="filename-display"></div>
-              </div>
-              
-              <button type="submit" class="submit-btn">Analyze Now</button>
-          </form>
-      </div>
-  </div>
+        <div class="upload-container">
+            <h2>Upload Your Track</h2>
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="file-upload-wrapper">
+                    <label for="file-upload" class="custom-file-upload">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag your audio file here</p>
+                        <span>or click to browse</span>
+                    </label>
+                    {{ form.file }}
+                    <div class="filename-display" id="filename-display"></div>
+                </div>
+                
+                <button type="submit" class="submit-btn">Analyze Now</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Result Section - Only shown when analysis is complete -->
+    {% if analysis_complete %}
+    <div class="result-section" id="result-section">
+        <div class="result-container">
+            <div class="result-box">
+                <h2 class="result-title">Song Analyzed Successfully! 🎵</h2>
+                
+                <div class="result-visualization">
+                    <div class="result-bar"></div>
+                    <div class="result-bar"></div>
+                    <div class="result-bar"></div>
+                    <div class="result-bar"></div>
+                    <div class="result-bar"></div>
+                    <div class="result-bar"></div>
+                </div>
+                
+                <div class="result-details">
+                    <div class="result-item">
+                        <span class="result-label">Song Name</span>
+                        <span class="result-value">{{ song.name }}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Predicted Genre</span>
+                        <span class="result-value genre-value">{{ song.genre }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-container">
+          <div class="footer-column">
+            <div class="footer-logo">
+              <span>♫</span>
+              <a href="#">BeatBliss</a>
+            </div>
+            <p>Discover and classify music genres with our advanced AI technology. </p>
+            <p>Perfect for artists, producers, and music enthusiasts.</p>
+            <div class="social-links">
+              <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="social-icon"><i class="fab fa-spotify"></i></a>
+            </div>
+          </div>
+          
+          <div class="footer-column">
+            <h3>Quick Links</h3>
+            <ul class="footer-links">
+              <li><a href={% url "home" %}><i class="fas fa-chevron-right"></i> Home</a></li>
+              <li><a href={% url "genreHome" %}><i class="fas fa-chevron-right"></i> Genre</a></li>
+              <li><a href={% url "recHome" %}><i class="fas fa-chevron-right"></i> Recommender</a></li>
+              <li><a href="#"><i class="fas fa-chevron-right"></i> About</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="copyright">
+          <p>&copy; 2025 BeatBliss. All rights reserved.</p>
+        </div>
+      </footer>
 
     <script>
-    // Add event listener to the Django form field
-    document.addEventListener('DOMContentLoaded', function() {
-      const fileInput = document.getElementById('id_audio_file');
-      if (fileInput) {
-          fileInput.setAttribute('accept', 'audio/*');
-          fileInput.style.display = 'none';
-          fileInput.addEventListener('change', function() {
-              displayFileName(this);
-          });
-      }
-    });
-    </script>
-    // Script at the bottom of your HTML file
-<script>
-    // Toggle mobile menu
-    function toggleMenu() {
-      const navLinks = document.querySelector('.nav-links');
-      const hamburger = document.querySelector('.hamburger');
-      const menuOverlay = document.querySelector('.menu-overlay');
-      
-      navLinks.classList.toggle('active');
-      hamburger.classList.toggle('active');
-      menuOverlay.classList.toggle('active');
-      
-      // Prevent scrolling when menu is open
-      if (navLinks.classList.contains('active')) {
-          document.body.style.overflow = 'hidden';
-      } else {
-          document.body.style.overflow = 'auto';
-      }
-  }
-  
-  // Display filename when a file is selected
-  function displayFileName(input) {
-      const fileNameDisplay = document.getElementById('filename-display');
-      if (input.files && input.files[0]) {
-          fileNameDisplay.textContent = input.files[0].name;
-      } else {
-          fileNameDisplay.textContent = '';
-      }
-  }
-  
-  document.addEventListener('DOMContentLoaded', function() {
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const hamburger = document.querySelector('.hamburger');
+            const menuOverlay = document.querySelector('.menu-overlay');
+            
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+            
+            // Prevent scrolling when menu is open
+            if (navLinks.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
+        }
+        
+        // Display filename when a file is selected
+        function displayFileName(input) {
+            const fileNameDisplay = document.getElementById('filename-display');
+            if (input.files && input.files[0]) {
+                fileNameDisplay.textContent = input.files[0].name;
+            } else {
+                fileNameDisplay.textContent = '';
+            }
+        }
+
+         document.addEventListener('DOMContentLoaded', function() {
       const fileInput = document.getElementById('file-upload');
       const dropArea = document.querySelector('.custom-file-upload');
       
@@ -180,6 +230,6 @@
           }
       }
   });
-</script>
+    </script>
 </body>
 </html>
