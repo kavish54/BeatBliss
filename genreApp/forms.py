@@ -6,5 +6,9 @@ class UploadSongForm(forms.ModelForm):
         model = Song
         fields = ['file']
         widgets = {
-            'file': forms.ClearableFileInput(attrs={'id': 'file-upload'}),
+            'file': forms.FileInput(attrs={
+                'id': 'file-upload',
+                'accept': 'audio/*',
+                'onchange': 'displayFileName(this)'
+            }),
         }

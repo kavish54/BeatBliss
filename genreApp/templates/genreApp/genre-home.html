@@ -1,231 +1,191 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Genre Classifier</title>
-    {% load static %}
-    <link rel="stylesheet" href={% static "genreApp/genre-home.css" %}>
-    <style>
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-          font-family: Arial, sans-serif;
-        }
-  
-        body {
-          background-color: #121212;
-          color: white;
-        }
-  
-        .navbar {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 1.5rem 1.5rem;
-          background-color: #1a1a1a;
-          position: relative;
-        }
-  
-        .left-section {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-        }
-  
-        .logo {
-          display: flex;
-          align-items: center;
-          font-size: 1.5rem;
-          font-weight: bold;
-          color: #ffcc00;
-        }
-  
-        .brand {
-          color: white;
-          text-decoration: none;
-          font-size: 2.125rem;
-          font-weight: bold;
-        }
-  
-        /* Centered Menu */
-        .button-group {
-          position: absolute;
-          left: 50%;
-          transform: translateX(-50%);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background: #2a2a2a;
-          padding: 0.625rem 0.9375rem;
-          border-radius: 0.625rem;
-          gap: 1.25rem;
-          width: auto;
-        }
-  
-        .button-group button {
-          background: transparent;
-          border: none;
-          color: white;
-          font-size: 1rem;
-          cursor: pointer;
-          padding: 0.5rem;
-          text-align: center;
-        }
-  
-        .button-group button a{
-          text-decoration:none;
-          color:white;
-        }
-        .button-group button a:hover{
-          text-decoration:none;
-          color: #ffcc00;
-        }
-  
-        .button-group button:hover {
-          color: #ffcc00;
-        }
-  
-        .auth {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-          margin-left: auto;
-        }
-  
-        .auth a {
-          text-decoration: none;
-          color: white;
-          font-weight: bold;
-        }
-  
-        .profile-img {
-          width: 2.5rem;
-          height: 2.5rem;
-          border-radius: 50%;
-          cursor: pointer;
-        }
-  
-        .hamburger {
-          display: none;
-          flex-direction: column;
-          cursor: pointer;
-          gap: 0.3125rem;
-        }
-  
-        .hamburger div {
-          width: 1.875rem;
-          height: 0.1875rem;
-          background-color: white;
-        }
-        
-        .nav-button{
-            text-decoration:none;
-        }
-  
-        /* Mobile Styles */
-        @media (max-width: 48rem) {
-          .navbar {
-            justify-content: space-between;
-            flex-wrap: wrap;
-          }
-  
-          .hamburger {
-            display: flex;
-          }
-  
-          .left-section {
-            display: flex;
-            align-items: center;
-          }
-  
-          .button-group {
-            display: none;
-            flex-direction: column;
-            align-items: flex-start;
-            background: #2a2a2a;
-            position: absolute;
-            top: 100%;
-            left: 12%; /* Align to the start */
-            width: auto;
-            padding: 0.625rem 1rem;
-            border-radius: 0.625rem;
-            text-align: left;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-          }
-  
-          .button-group.active {
-            display: flex;
-          }
-  
-          .button-group button {
-            padding: 0.75rem;
-            font-size: 1.1rem;
-            width: 100%;
-            border-bottom: 0.0625rem solid #444;
-          }
-        }
-      </style>
+    <title>BeatBliss - Music Genre Classifier</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'genreApp/genre-home.css' %}">
 </head>
-<body>
-    {% comment %} <nav>
-        <div class="logo">BeatBliss</div>
-        <ul>
-            <li><a href={% url "genreHome" %}>Home</a></li>
-            <li><a href={% url "recHome" %}>Recommender</a></li>
+<body class="body-color">
+    <!-- Mobile menu overlay -->
+    <div class="menu-overlay" onclick="toggleMenu()"></div>
 
-            {% if request.session.current_user %}
-                <li><a href={% url "profile-page" %}> {{ request.session.current_user }} </a></li>
-            {% else %}
-                <li><a href={% url "login" %}>Login</a></li>
-            {% endif %}
-        </ul>
-    </nav> {% endcomment %}
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="left-section">
-          <div class="hamburger" onclick="toggleMenu()">
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
           <div class="logo">
-            <span>⚡</span>
+            <span>♫</span>
             <a href="#" class="brand">BeatBliss</a>
           </div>
         </div>
   
-        <div class="button-group">
-          <button><a class='nav-button' href={% url "genreHome" %}>Home</a></button>
-          <button><a class='nav-button' href={% url "recHome" %}>Recommender</a></button>
-          <button><a class='nav-button' href='#'>About us</a></button>
+        <div class="nav-links">
+          <a href="genreHome" class="nav-link">Home</a>
+          <a href="recHome" class="nav-link">Recommender</a>
+          <a href="#" class="nav-link">Discover</a>
+          <a href="#" class="nav-link">About</a>
         </div>
   
         <div class="auth">
-            {% if request.session.current_user %}
-            <a href={% url "login" %}
-                ><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img"
-            /></a>
-            {% else %}
-                <a href={% url "login" %}><h3>Login</h3></a>
-            {% endif %}
+            <!-- User not logged in scenario -->
+            <a href="login" class="login-btn">Sign In</a>
+            
+            <!-- User logged in scenario (uncomment when needed) -->
+            <!-- <a href="profile-page">
+                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img" />
+            </a> -->
+        </div>
+
+        <div class="hamburger" onclick="toggleMenu()">
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
     </nav>
 
-    <div class="top-section">
-        <h1>Discover Your Music's Genre</h1>
-        <p>Upload your song and let our AI classify its genre instantly.</p>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <div class="music-visualizer">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <h1>Discover Your Music's Genre Identity</h1>
+            <p>Our advanced AI analyzes your tracks and identifies their genre. Perfect for artists, producers, and music enthusiasts looking to categorize their sound.</p>
+        </div>
     </div>
 
-    <div class="bottom-section">
-        <form action="" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label for="file-upload" class="custom-file-upload">
-                Choose File
-            </label>
-            <input type="file" id="file-upload" name="file">
-            <button type="submit">Submit</button>
-        </form>
-    </div>
+    <!-- Upload Section -->
+    <div class="upload-section">
+      <div class="upload-container">
+          <h2>Upload Your Track</h2>
+          <form action="" method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              
+              <div class="file-upload-wrapper">
+                  <label for="file-upload" class="custom-file-upload">
+                      <i class="fas fa-cloud-upload-alt"></i>
+                      <p>Drag your audio file here</p>
+                      <span>or click to browse</span>
+                  </label>
+                  {{ form.file }}
+                  <div class="filename-display" id="filename-display"></div>
+              </div>
+              
+              <button type="submit" class="submit-btn">Analyze Now</button>
+          </form>
+      </div>
+  </div>
+
+    <script>
+    // Add event listener to the Django form field
+    document.addEventListener('DOMContentLoaded', function() {
+      const fileInput = document.getElementById('id_audio_file');
+      if (fileInput) {
+          fileInput.setAttribute('accept', 'audio/*');
+          fileInput.style.display = 'none';
+          fileInput.addEventListener('change', function() {
+              displayFileName(this);
+          });
+      }
+    });
+    </script>
+    // Script at the bottom of your HTML file
+<script>
+    // Toggle mobile menu
+    function toggleMenu() {
+      const navLinks = document.querySelector('.nav-links');
+      const hamburger = document.querySelector('.hamburger');
+      const menuOverlay = document.querySelector('.menu-overlay');
+      
+      navLinks.classList.toggle('active');
+      hamburger.classList.toggle('active');
+      menuOverlay.classList.toggle('active');
+      
+      // Prevent scrolling when menu is open
+      if (navLinks.classList.contains('active')) {
+          document.body.style.overflow = 'hidden';
+      } else {
+          document.body.style.overflow = 'auto';
+      }
+  }
+  
+  // Display filename when a file is selected
+  function displayFileName(input) {
+      const fileNameDisplay = document.getElementById('filename-display');
+      if (input.files && input.files[0]) {
+          fileNameDisplay.textContent = input.files[0].name;
+      } else {
+          fileNameDisplay.textContent = '';
+      }
+  }
+  
+  document.addEventListener('DOMContentLoaded', function() {
+      const fileInput = document.getElementById('file-upload');
+      const dropArea = document.querySelector('.custom-file-upload');
+      
+      if (fileInput && dropArea) {
+          // Handle click to browse
+          dropArea.addEventListener('click', function(e) {
+              fileInput.click();
+          });
+          
+          // Handle file selection
+          fileInput.addEventListener('change', function() {
+              displayFileName(this);
+          });
+          
+          // Prevent default drag behaviors
+          ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+              dropArea.addEventListener(eventName, preventDefaults, false);
+          });
+          
+          function preventDefaults(e) {
+              e.preventDefault();
+              e.stopPropagation();
+          }
+          
+          // Highlight drop area when item is dragged over it
+          ['dragenter', 'dragover'].forEach(eventName => {
+              dropArea.addEventListener(eventName, highlight, false);
+          });
+          
+          ['dragleave', 'drop'].forEach(eventName => {
+              dropArea.addEventListener(eventName, unhighlight, false);
+          });
+          
+          function highlight() {
+              dropArea.classList.add('highlight');
+          }
+          
+          function unhighlight() {
+              dropArea.classList.remove('highlight');
+          }
+          
+          // Handle dropped files
+          dropArea.addEventListener('drop', handleDrop, false);
+          
+          function handleDrop(e) {
+              const dt = e.dataTransfer;
+              const files = dt.files;
+              
+              if (files.length) {
+                  fileInput.files = files;
+                  displayFileName(fileInput);
+                  
+                  // Trigger change event manually
+                  const event = new Event('change', { bubbles: true });
+                  fileInput.dispatchEvent(event);
+              }
+          }
+      }
+  });
+</script>
 </body>
 </html>
