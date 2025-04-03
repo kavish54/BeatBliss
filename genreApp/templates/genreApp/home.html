@@ -64,7 +64,7 @@
         <div class="text-container">
             <h2>Discover Genres</h2>
             <p>Ever Wondered What Genre Your Song Belongs To? Find Out Now!</p>
-            <a href="/genre" class="go-btn">Go to Genre</a>
+            <a href={% url "genreHome" %} class="go-btn">Go to Genre</a>
         </div>
     </section>
 
@@ -75,7 +75,7 @@
             <p>Get personalized music recommendations based on your favorite tracks. 
               Simply search for a song, explore similar suggestions, and save your favorites directly to Spotify. 
             </p>
-            <a href="/recommender" class="go-btn">Go to Recommender</a>
+            <a href={% url "recHome" %} class="go-btn">Go to Recommender</a>
         </div>
         <div class="image-container">
             <img src="{% static 'genreApp/images/recimage.png' %}" alt="Recommender">

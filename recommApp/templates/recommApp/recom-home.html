@@ -16,39 +16,31 @@
     <!-- Mobile menu overlay -->
     <div class="menu-overlay" onclick="toggleMenu()"></div>
 
-    <!-- Navigation -->
     <nav class="navbar">
-        <div class="left-section">
-            <div class="logo">
-                <span>♫</span>
-                <a href="{% url 'home' %}" class="brand">BeatBliss</a>
-            </div>
-        </div>
-    
-        <div class="button-group">
-            <button><a class="nav-link" href="{% url 'home' %}">Home</a></button>
-            <button><a class="nav-link" href="{% url 'genreHome' %}">Genre</a></button>
-            <button><a class="nav-link" href="{% url 'recHome' %}">Recommender</a></button>
-            <button><a class="nav-link" href="#">About</a></button>
-        </div>
-    
-        <div class="auth">
-            {% if request.session.current_user %}
-            <a href="{% url 'profile-page' %}">
-                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img" />
-            </a>
-            {% else %}
-                <a href="{% url 'login' %}"><h3>Login</h3></a>
-            {% endif %}
-            
-            <!-- Hamburger menu for mobile -->
-            <div class="hamburger" onclick="toggleMenu()">
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-        </div>
-    </nav>
+      <div class="left-section">
+          <div class="logo">
+              <span>♫</span>
+              <a href={% url "home" %} class="brand">BeatBliss</a>
+          </div>
+      </div>
+  
+      <div class="button-group">
+          <button><a class="nav-link" href={% url "home" %}>Home</a></button>
+          <button><a class="nav-link" href={% url "genreHome" %}>Genre</a></button>
+          <button><a class="nav-link" href={% url "recHome" %}>Recommender</a></button>
+          <button><a class="nav-link" href="#">About</a></button>
+      </div>
+  
+      <div class="auth">
+          {% if request.session.current_user %}
+          <a href={% url "profile-page" %}
+              ><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img"
+          /></a>
+          {% else %}
+              <a href={% url "login" %}><h3>Login</h3></a>
+          {% endif %}
+      </div>
+  </nav>
 
     <!-- Hero Section -->
     <div class="hero-section">
@@ -158,38 +150,37 @@
     </div>
     {% endif %}
 
-    <!-- Footer Section -->
     <footer class="footer">
-        <div class="footer-container">
-          <div class="footer-column">
-            <div class="footer-logo">
-              <span>♫</span>
-              <a href="#">BeatBliss</a>
-            </div>
-            <p>Discover your next favorite song with our AI-powered music recommendation system.</p>
-            <p>Perfect for music lovers looking to expand their musical horizons.</p>
-            <div class="social-links">
-              <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-              <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-              <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-              <a href="#" class="social-icon"><i class="fab fa-spotify"></i></a>
-            </div>
+      <div class="footer-container">
+        <div class="footer-column">
+          <div class="footer-logo">
+            <span>♫</span>
+            <a href="#">BeatBliss</a>
           </div>
-          
-          <div class="footer-column">
-            <h3>Quick Links</h3>
-            <ul class="footer-links">
-              <li><a href="{% url 'home' %}"><i class="fas fa-chevron-right"></i> Home</a></li>
-              <li><a href="{% url 'genreHome' %}"><i class="fas fa-chevron-right"></i> Genre</a></li>
-              <li><a href="{% url 'recHome' %}"><i class="fas fa-chevron-right"></i> Recommender</a></li>
-              <li><a href="#"><i class="fas fa-chevron-right"></i> About</a></li>
-            </ul>
+          <p>Discover and classify music genres with our advanced AI technology. </p>
+          <p>Perfect for artists, producers, and music enthusiasts.</p>
+          <div class="social-links">
+            <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-spotify"></i></a>
           </div>
         </div>
         
-        <div class="copyright">
-          <p>&copy; 2025 BeatBliss. All rights reserved.</p>
+        <div class="footer-column">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href={% url "home" %}><i class="fas fa-chevron-right"></i> Home</a></li>
+            <li><a href={% url "genreHome" %}><i class="fas fa-chevron-right"></i> Genre</a></li>
+            <li><a href={% url "recHome" %}><i class="fas fa-chevron-right"></i> Recommender</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> About</a></li>
+          </ul>
         </div>
+      </div>
+      
+      <div class="copyright">
+        <p>&copy; 2025 BeatBliss. All rights reserved.</p>
+      </div>
     </footer>
 
     <!-- Spotify Login Popup -->
@@ -330,6 +321,40 @@
           alert('An error occurred while liking the song.');
         });
       }
+      function toggleMenu() {
+        const navLinks = document.querySelector('.nav-links');
+        const hamburger = document.querySelector('.hamburger');
+        const menuOverlay = document.querySelector('.menu-overlay');
+        const buttonGroup = document.querySelector('.button-group');
+        
+        buttonGroup.classList.toggle('active');
+        hamburger.classList.toggle('active');
+        menuOverlay.classList.toggle('active');
+        
+        // Prevent scrolling when menu is open
+        if (buttonGroup.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add hamburger menu element if not already in HTML
+        if (!document.querySelector('.hamburger')) {
+            const navbar = document.querySelector('.navbar');
+            const hamburger = document.createElement('div');
+            hamburger.className = 'hamburger';
+            
+            for (let i = 0; i < 3; i++) {
+                const bar = document.createElement('div');
+                hamburger.appendChild(bar);
+            }
+            
+            hamburger.addEventListener('click', toggleMenu);
+            navbar.appendChild(hamburger);
+        }
+    });
     </script>
 </body>
 </html>
