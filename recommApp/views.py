@@ -44,7 +44,7 @@ def loginauth(request):
         client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
         redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI"),
         scope=scope,
-        show_dialog=True
+        # show_dialog=True
     )
 
 

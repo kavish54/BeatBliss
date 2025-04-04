@@ -34,7 +34,7 @@
                 ><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img"
             /></a>
             {% else %}
-            <a href={% url "login" %} class="login-button">Login</a>
+                <a href={% url "login" %}><h3>Login</h3></a>
             {% endif %}
         </div>
     </nav>
@@ -56,6 +56,27 @@
     </div>
 
     <!-- Upload Section -->
+    {% comment %} <div class="upload-section">
+        <div class="upload-container">
+            <h2>Upload Your Track</h2>
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="file-upload-wrapper">
+                    <label for="file-upload" class="custom-file-upload">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag your audio file here</p>
+                        <span>or click to browse</span>
+                    </label>
+                    {{ form.file }}
+                    <div class="filename-display" id="filename-display"></div>
+                </div>
+                
+                <button type="submit" class="submit-btn">Analyze Now</button>
+            </form>
+        </div>
+    </div> {% endcomment %}
+
     <div class="upload-section">
         <div class="upload-container">
             <h2>Upload Your Track</h2>
@@ -76,6 +97,8 @@
             </form>
         </div>
     </div>
+   
+    
 
     <!-- Result Section - Only shown when analysis is complete -->
     {% if analysis_complete %}
@@ -143,6 +166,24 @@
       </footer>
 
     <script>
+        {% comment %} document.addEventListener("DOMContentLoaded", function () {
+            let fileInput = document.getElementById("file-upload");
+            let fileLabel = document.getElementById("file-label");
+    
+            // Ensure clicking label triggers only one file selection
+            document.querySelector(".custom-file-upload").addEventListener("click", function () {
+                fileInput.click();
+            });
+    
+            // Update filename display when file is selected
+            fileInput.addEventListener("change", function () {
+                if (this.files.length > 0) {
+                    fileLabel.textContent = this.files[0].name;  // Show selected filename
+                } else {
+                    fileLabel.textContent = "or click to browse";
+                }
+            });
+        }); {% endcomment %}
         function toggleMenu() {
             const navLinks = document.querySelector('.nav-links');
             const hamburger = document.querySelector('.hamburger');
@@ -170,66 +211,63 @@
             }
         }
 
-         document.addEventListener('DOMContentLoaded', function() {
-      const fileInput = document.getElementById('file-upload');
-      const dropArea = document.querySelector('.custom-file-upload');
-      
-      if (fileInput && dropArea) {
-          // Handle click to browse
-          dropArea.addEventListener('click', function(e) {
-              fileInput.click();
-          });
-          
-          // Handle file selection
-          fileInput.addEventListener('change', function() {
-              displayFileName(this);
-          });
-          
-          // Prevent default drag behaviors
-          ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-              dropArea.addEventListener(eventName, preventDefaults, false);
-          });
-          
-          function preventDefaults(e) {
-              e.preventDefault();
-              e.stopPropagation();
-          }
-          
-          // Highlight drop area when item is dragged over it
-          ['dragenter', 'dragover'].forEach(eventName => {
-              dropArea.addEventListener(eventName, highlight, false);
-          });
-          
-          ['dragleave', 'drop'].forEach(eventName => {
-              dropArea.addEventListener(eventName, unhighlight, false);
-          });
-          
-          function highlight() {
-              dropArea.classList.add('highlight');
-          }
-          
-          function unhighlight() {
-              dropArea.classList.remove('highlight');
-          }
-          
-          // Handle dropped files
-          dropArea.addEventListener('drop', handleDrop, false);
-          
-          function handleDrop(e) {
-              const dt = e.dataTransfer;
-              const files = dt.files;
-              
-              if (files.length) {
-                  fileInput.files = files;
-                  displayFileName(fileInput);
-                  
-                  // Trigger change event manually
-                  const event = new Event('change', { bubbles: true });
-                  fileInput.dispatchEvent(event);
-              }
-          }
-      }
-  });
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file-upload');
+            const dropArea = document.querySelector('.custom-file-upload');
+            
+            if (fileInput && dropArea) {
+                // Handle file selection
+                fileInput.addEventListener('change', function() {
+                    displayFileName(this);
+                });
+                
+                // Handle click on the drop area
+                dropArea.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    fileInput.click();
+                });
+                
+                // Prevent default drag behaviors
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, preventDefaults, false);
+                });
+                
+                function preventDefaults(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                
+                // Highlight drop area when item is dragged over it
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, highlight, false);
+                });
+                
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, unhighlight, false);
+                });
+                
+                function highlight() {
+                    dropArea.classList.add('highlight');
+                }
+                
+                function unhighlight() {
+                    dropArea.classList.remove('highlight');
+                }
+                
+                // Handle dropped files
+                dropArea.addEventListener('drop', handleDrop, false);
+                
+                function handleDrop(e) {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    
+                    if (files.length) {
+                        fileInput.files = files;
+                        displayFileName(fileInput);
+                    }
+                }
+            }
+        });
     </script>
 </body>
 </html>
