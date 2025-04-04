@@ -136,3 +136,9 @@ def like_playlist(request):
             return JsonResponse({"status": "success", "message": "Playlist added to spotify"})
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
+        
+def logout(request):
+    # Clear all session data
+    request.session.flush()
+    # Redirect to home page
+    return redirect('home')

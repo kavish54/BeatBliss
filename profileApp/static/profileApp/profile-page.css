@@ -159,6 +159,46 @@ body {
   width: 100%;
 }
 
+/* Logout Button Styling */
+.logout-button {
+  background: linear-gradient(45deg, #7B68EE, #FF6584);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 15px rgba(123, 104, 238, 0.2);
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  display: inline-block;
+  margin-left: 1rem;
+}
+
+.logout-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.7s ease;
+}
+
+.logout-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(123, 104, 238, 0.4);
+}
+
+.logout-button:hover::before {
+  left: 100%;
+}
+
 /* Auth Section */
 .auth {
   display: flex;

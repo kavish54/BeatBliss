@@ -26,13 +26,13 @@
         </div>
     
         <div class="auth">
-            {% if request.session.current_user %}
+            
             <a href={% url "profile-page" %}
                 ><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img"
             /></a>
-            {% else %}
-                <a href={% url "login" %}><h3>Login</h3></a>
-            {% endif %}
+            
+                <a href="{% url 'logout' %}" class="logout-button">Logout</a>
+            
         </div>
     </nav>
     <!-- Profile Section -->

@@ -17,7 +17,6 @@ urlpatterns = [
     path('register/', register_view, name='register'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
-    path('', home_view, name='home'),
     path('verify-real-email/', verify_real_email, name='verify-real-email'),  # Email validation before registration
     path('password-reset/', password_reset_view, name='password_reset'),
     path('password-reset/<uidb64>/<token>/', password_reset_confirm_view, name='password_reset_confirm'),
