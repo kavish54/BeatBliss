@@ -159,6 +159,157 @@ body {
   width: 100%;
 }
 
+/* Modal Dialog */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1001;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background: rgba(30, 30, 30, 0.95);
+  margin: 15% auto;
+  padding: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.close-modal {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+  color: #FF6584;
+  text-decoration: none;
+}
+
+.modal h3 {
+  margin-top: 0;
+  color: white;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  background: linear-gradient(to right, #FF6584, #7B68EE);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#playlist-name {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(50, 50, 50, 0.8);
+  color: white;
+  font-size: 1rem;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#playlist-name:focus {
+  outline: none;
+  border-color: #7B68EE;
+  box-shadow: 0 0 0 2px rgba(123, 104, 238, 0.3);
+}
+
+#create-playlist-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(45deg, #FF6584, #7B68EE);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#create-playlist-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 101, 132, 0.3);
+}
+
+/* Toast Notification */
+.toast-notification {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: rgba(40, 40, 40, 0.9);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.toast-notification.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.toast-notification.error {
+  background: rgba(220, 53, 69, 0.9);
+}
+
+.toast-notification.info {
+  background: rgba(13, 110, 253, 0.9);
+}
+
+.toast-notification.success {
+  background: rgba(25, 135, 84, 0.9);
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+}
+
+.toast-icon {
+  margin-right: 12px;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.toast-message {
+  font-weight: 500;
+}
+
 /* Logout Button Styling */
 .logout-button {
   background: linear-gradient(45deg, #7B68EE, #FF6584);

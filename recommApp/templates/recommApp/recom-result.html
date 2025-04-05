@@ -43,9 +43,9 @@
     <h1>🎶 Recommended Songs</h1>
 
     <div class="container">
-        <div class='top-content'>
+         <div class='top-content'>
             <h2>Your song:</h2>
-            <button class='add-playlist-btn'><a href="{% url 'add_playlist' playlist_id %}">Add to Spotify Playlist</a></button>
+            <button class='add-playlist-btn' onclick="addToPlaylist('{{ playlist_id }}'); return false;">Add to Spotify Playlist</button>
         </div>
          
         <div class="song-card">
@@ -65,12 +65,13 @@
             
             <div class="song-controls">
                 <div class="spotify-embed">
-                    <iframe src="https://open.spotify.com/embed/track/{{ sid }}" 
+                    <iframe src="https://open.spotify.com/embed/track/{{ sid }}?utm_source=generator" 
                             width="100%" 
                             height="155" 
                             frameborder="0" 
                             allowtransparency="true" 
-                            allow="encrypted-media">
+                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                            loading="lazy">
                     </iframe>
                 </div>
             </div>
@@ -126,6 +127,21 @@
             <p>No recommendations found.</p>
         {% endif %}
     </div>
+
+    <div id="toast-notification" class="toast-notification">
+        <div class="toast-content">
+            <i class="fas fa-check-circle toast-icon"></i>
+            <div class="toast-message">Playlist added successfully!</div>
+        </div>
+    </div>
+    <div id="playlist-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Name Your Playlist</h3>
+            <input type="text" id="playlist-name" placeholder="Enter playlist name">
+            <button id="create-playlist-btn">Create Playlist</button>
+        </div>
+    </div>
     
     <script>
         function likeSong(songId) {
@@ -140,12 +156,122 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === "success") {
-                    alert("Song added to Liked Songs on Spotify!");
+                    showToast("Song added to your liked songs!");
                 } else {
-                    alert("Error: " + data.message);
+                    showToast("Error: " + data.message, "error");
                 }
             })
-            .catch(error => console.error("Error:", error));
+            .catch(error => {
+                console.error("Error:", error);
+                showToast("An error occurred while liking the song.", "error");
+            });
+        }
+        
+        function addToPlaylist(playlistId) {
+            // Show the modal instead of immediately creating the playlist
+            const modal = document.getElementById('playlist-modal');
+            const playlistNameInput = document.getElementById('playlist-name');
+            const createPlaylistBtn = document.getElementById('create-playlist-btn');
+            const closeModal = document.querySelector('.close-modal');
+            
+            // Set default playlist name
+            playlistNameInput.value = "BeatBliss: {{ current.name }}";
+            
+            // Show the modal
+            modal.style.display = "block";
+            
+            // Focus on the input
+            playlistNameInput.focus();
+            playlistNameInput.select();
+            
+            // Close modal when clicking the X
+            closeModal.onclick = function() {
+                modal.style.display = "none";
+            }
+            
+            // Close modal when clicking outside
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+            
+            // Create playlist when button is clicked
+            createPlaylistBtn.onclick = function() {
+                const playlistName = playlistNameInput.value.trim();
+                if (!playlistName) {
+                    showToast("Please enter a playlist name", "error");
+                    return;
+                }
+                
+                createSpotifyPlaylist(playlistId, playlistName);
+                modal.style.display = "none";
+            }
+            
+            // Also handle Enter key
+            playlistNameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    createPlaylistBtn.click();
+                }
+            });
+        }
+        
+        function createSpotifyPlaylist(playlistId, playlistName) {
+            showToast("Creating playlist on Spotify...", "info");
+            
+            fetch(`/added/${playlistId}/`, {
+                method: "POST",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({
+                    playlist_name: playlistName
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    showToast(data.message);
+                } else {
+                    showToast("Error: " + data.message, "error");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                showToast("An error occurred while adding the playlist.", "error");
+            });
+        }
+        
+        
+        function showToast(message, type = "success") {
+            const toast = document.getElementById("toast-notification");
+            const toastMessage = document.querySelector(".toast-message");
+            const toastIcon = document.querySelector(".toast-icon");
+            
+            toastMessage.textContent = message;
+            
+            // Reset classes
+            toast.classList.remove("error", "info", "success");
+            
+            // Add appropriate class based on type
+            toast.classList.add(type);
+            
+            // Update icon based on type
+            if (type === "error") {
+                toastIcon.className = "fas fa-exclamation-circle toast-icon";
+            } else if (type === "info") {
+                toastIcon.className = "fas fa-info-circle toast-icon";
+            } else {
+                toastIcon.className = "fas fa-check-circle toast-icon";
+            }
+            
+            toast.classList.add("show");
+            
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
         }
         function toggleMenu() {
             const navLinks = document.querySelector('.nav-links');

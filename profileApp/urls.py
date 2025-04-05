@@ -6,5 +6,5 @@ from profileApp import views
 urlpatterns = [
     path('profile/',profilePage,name="profile-page"),
     path('like-playlist/',like_playlist,name="like-playlist"),
-    path('logout/', views.logout, name='logout'),
+    path('signout/', views.signout, name='signout'),
 ]

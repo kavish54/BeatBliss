@@ -32,8 +32,8 @@ sp = spotipy.Spotify(
 )
 
 def recomHome(request):
-    if 'spotify_token' in request.session:
-        del request.session['spotify_token']
+    # if 'spotify_token' in request.session:
+        # del request.session['spotify_token']
     return render(request,'recommApp/recom-home.html',context = {})
 
 # user-library-read add in below
@@ -191,34 +191,71 @@ def spotify_login(request):  # This handles the login page
     return render(request, "recommApp/spotify-login.html")
 
 
-def add_playlist_spotify(request,plid):
+def add_playlist_spotify(request, plid):
     token_info = request.session.get("spotify_token")
     spotify_user_id = request.session.get("spotify_user_id")
 
     if not token_info or not spotify_user_id:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                "status": "error", 
+                "message": "User not authenticated with Spotify"
+            })
         return HttpResponse("User not authenticated with Spotify", status=401)
     
-    sp = spotipy.Spotify(auth=token_info["access_token"])
+    try:
+        sp = spotipy.Spotify(auth=token_info["access_token"])
+        playlist = Playlist.objects.get(playlistID=plid)
 
-    playlist = Playlist.objects.get(playlistID=plid)
+        track_uris = []
+        track_uris.append(f"spotify:track:{playlist.songID}")
+        for song_id in playlist.recommSongs:
+            track_uris.append(f"spotify:track:{song_id}")  # Spotify URIs format
 
-    track_uris = []
-    track_uris.append(f"spotify:track:{playlist.songID}")
-    for song_id in playlist.recommSongs:
-        track_uris.append(f"spotify:track:{song_id}")  # Spotify URIs format
-    print("Track URIs:", track_uris)
+        # Get custom playlist name if provided
+        if request.method == "POST":
+            data = json.loads(request.body)
+            playlist_name = data.get("playlist_name", f"BeatBliss: {playlist.songID}")
+        else:
+            playlist_name = f"BeatBliss: {playlist.songID}"
 
-    # Create a new playlist in the user's Spotify account
-    new_playlist = sp.user_playlist_create(
-        user=spotify_user_id,
-        name=f"BeatBliss: {playlist.songID}",
-        public=False,
-        description="Recommended songs playlist from BeatBliss"
-    )
+        # Create a new playlist in the user's Spotify account
+        new_playlist = sp.user_playlist_create(
+            user=spotify_user_id,
+            name=playlist_name,
+            public=False,
+            description="Recommended songs playlist from BeatBliss"
+        )
 
-    sp.playlist_add_items(new_playlist['id'], track_uris)
-
-    return HttpResponse(f"<h1>Added Playlist to Spotify!</h1>Playlist ID: {new_playlist['id']}<br>Tracks: {track_uris}")
+        sp.playlist_add_items(new_playlist['id'], track_uris)
+        
+        # Check if this is an AJAX request
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                "status": "success",
+                "message": "Playlist added to your Spotify account!",
+                "playlist_id": new_playlist['id'],
+                "playlist_url": new_playlist['external_urls']['spotify']
+            })
+            
+        # For non-AJAX requests, return the original response
+        return HttpResponse(f"<h1>Added Playlist to Spotify!</h1>Playlist ID: {new_playlist['id']}<br>Tracks: {track_uris}")
+        
+    except Playlist.DoesNotExist:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                "status": "error",
+                "message": "Playlist not found"
+            })
+        return HttpResponse("Playlist not found", status=404)
+        
+    except Exception as e:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                "status": "error",
+                "message": str(e)
+            })
+        return HttpResponse(f"Error: {str(e)}", status=500)
 
 def like_song(request):
     if request.method == "POST":
