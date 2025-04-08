@@ -1,8 +1,11 @@
+import os
+import pickle
+from django.conf import settings
 from django.shortcuts import render
 from django.contrib.auth import get_user_model
 import librosa
 from .forms import UploadSongForm
-from genreApp.utils.genre_finder import genre_finder, convert_to_wav, feature_extract
+from genreApp.utils.genre_finder import convert_to_wav,extract_features,predict_genre
 
 User = get_user_model()
 
@@ -29,22 +32,34 @@ def genreHome(request):
             song_obj.save()
             
             # Convert and Extract Features
+            MODEL_SAVE_PATH = os.path.join(settings.BASE_DIR, "media", "ML_models", "genre_classifier_model.pkl")
             file_path = song_obj.file.path
-            wav_path = convert_to_wav(file_path)  # Convert to WAV
-            song, sr = librosa.load(wav_path, sr=None)
-            features = feature_extract(song, sr)
+            with open(MODEL_SAVE_PATH, 'rb') as f:
+                loaded_model = pickle.load(f)
+            result = predict_genre(loaded_model, file_path)
+            # wav_path = convert_to_wav(file_path)  # Convert to WAV
+            # song, sr = librosa.load(wav_path, sr=None)
+            # features = feature_extract(song, sr)
             
-            genre = genre_finder(features)
+            # genre = genre_finder(features)
             
             # Save extracted features
-            for key, value in features.items():
-                setattr(song_obj, key, value)
+            # for key, value in features.items():
+            #     setattr(song_obj, key, value)
             
-            song_obj.genre = genre
-            song_obj.duration = len(song) / sr  # Duration in seconds
-            song_obj.save()
+            # song_obj.genre = genre
+            # song_obj.duration = len(song) / sr  # Duration in seconds
+            # song_obj.save()
             
             # Add song and success flag to context
+            genres = []
+            perc = []
+            for pred in result['predictions']:
+                # Convert probability to percentage
+                genres.append(str(pred['genre']).upper())
+                perc.append(round(pred['probability'] * 100, 2))
+            context["genres"] = genres
+            context["perc"] = perc
             context["song"] = song_obj
             context["analysis_complete"] = True
             context["form"] = UploadSongForm()  # Reset form for new upload
