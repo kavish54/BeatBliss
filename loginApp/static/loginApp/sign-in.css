@@ -12,7 +12,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: #2a2a3a;
+    background: #18181b;
     color: white;
 }
 .container {
@@ -92,3 +92,99 @@ button.create-btn {
 button.create-btn:hover {
     background: #6a4ae5;
 }
+.form-group {
+    margin-bottom: 1.5rem; /* Add spacing between each form group */
+}
+
+.form-group label {
+    display: block; /* Ensures the label is on its own line */
+    margin-bottom: 0.5rem; /* Space between label and input field */
+    font-weight: bold; /* Optional, to make the label stand out */
+}
+
+input {
+    background: #333;
+    color: white;
+    width: 106%; /* Same width as the sign-in button */
+    padding: 10px; /* Add padding inside the input field */
+    margin-top: 0.5rem; /* Slight margin between label and input field */
+}
+.right-section h1 {
+    text-align: center;
+    margin-bottom: 2rem; /* Add space below the heading */
+    font-size: 2rem; /* Optional: Adjust the font size for better readability */
+}
+#SignUp-button a {
+    color: #c084fc;
+    text-decoration: none;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+#SignUp-button a:hover {
+    color: #7b5dfb; /* Change color on hover */
+}
+
+#ForgotPassword-button a:hover {
+    color: #7b5dfb; /* Change color on hover */
+}
+
+/* Main scrollbar styling */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  
+  /* Track styling - the area behind the thumb */
+  ::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Thumb styling - the draggable scrolling element */
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #8e44ad, #3498db);
+    border-radius: 10px;
+    border: 2px solid #1a1a1a;
+    transition: background 0.3s ease;
+  }
+  
+  /* Thumb hover effect */
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #9b59b6, #2980b9);
+    box-shadow: 0 0 8px rgba(142, 68, 173, 0.8);
+  }
+  
+  /* Button styling - the buttons on the scrollbar */
+  ::-webkit-scrollbar-button {
+    display: none;
+  }
+  
+  /* Corner styling - where horizontal and vertical scrollbars meet */
+  ::-webkit-scrollbar-corner {
+    background: #1a1a1a;
+  }
+  
+  /* Optional: Add a subtle pulsing animation to the scrollbar thumb */
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 rgba(142, 68, 173, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 10px rgba(142, 68, 173, 0.7);
+    }
+    100% {
+      box-shadow: 0 0 0 rgba(142, 68, 173, 0.4);
+    }
+  }
+  
+  /* Apply the animation on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    animation: pulse 2s infinite;
+  }
+  
+  /* For Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #8e44ad #1a1a1a;
+  }

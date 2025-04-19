@@ -1,5 +1,7 @@
+import json
 import os
-from django.shortcuts import render
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
 import spotipy
 from django.conf import settings
 from loginApp.models import User
@@ -9,14 +11,16 @@ from spotipy.oauth2 import SpotifyClientCredentials
 from spotipy.exceptions import SpotifyException
 
 def profilePage(request):
-    os.environ['SPOTIPY_CLIENT_ID'] = 'cfd82609829c4df08e69069c5c37e201'
-    os.environ['SPOTIPY_CLIENT_SECRET'] = '0cc553a74abf4a328b0cd70a661fd01f'
+    os.environ['SPOTIPY_CLIENT_ID'] = '7d014370fbc24589848407b92579c6e7'
+    os.environ['SPOTIPY_CLIENT_SECRET'] = '2e0b934440ab44eab116a6b87e7ac3cf'
     os.environ['SPOTIPY_REDIRECT_URI'] = 'http://127.0.0.1:8000/callback'
+
+    # Create your views here.
 
     sp = spotipy.Spotify(
         auth_manager=SpotifyClientCredentials(
-            client_id='cfd82609829c4df08e69069c5c37e201',
-            client_secret='0cc553a74abf4a328b0cd70a661fd01f'
+            client_id='7d014370fbc24589848407b92579c6e7',
+            client_secret='2e0b934440ab44eab116a6b87e7ac3cf'
         )
     )
 
@@ -91,7 +95,68 @@ def profilePage(request):
         except SpotifyException:
             print(f"liked songs----Invalid Spotify ID: {song_id}")  # Debugging
 
-
     context = {"playlist_dict": playlist_dict, "history_dict": history_dict,"liked_songs":liked_songs,"username":username}
     return render(request, 'profileApp/profile-page.html', context)
 
+def like_playlist(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        plid = data.get("pl_id")
+        playlist_name = data.get("playlist_name", "BeatBliss Playlist")
+        user = request.session.get("current_user")
+        token_info = request.session.get("spotify_token")
+        spotify_user_id = request.session.get("spotify_user_id")
+        
+        if not token_info or not spotify_user_id:
+            # If user is not authenticated with Spotify, redirect to auth
+            from recommApp.views import loginauth
+            auth_url = loginauth(request)._headers['location'][1]
+            return JsonResponse({
+                "status": "auth_required", 
+                "message": "Please log in to Spotify first",
+                "auth_url": auth_url
+            })
+        
+        try:
+            sp = spotipy.Spotify(auth=token_info["access_token"])
+            playlist = Playlist.objects.get(playlistID=plid)
+
+            track_uris = []
+            track_uris.append(f"spotify:track:{playlist.songID}")
+            for song_id in playlist.recommSongs:
+                if song_id:  # Skip empty IDs
+                    track_uris.append(f"spotify:track:{song_id}")  # Spotify URIs format
+
+            # Create a new playlist in the user's Spotify account
+            new_playlist = sp.user_playlist_create(
+                user=spotify_user_id,
+                name=playlist_name,
+                public=False,
+                description="Recommended songs playlist from BeatBliss"
+            )
+
+            sp.playlist_add_items(new_playlist['id'], track_uris)
+
+            # Add to liked playlists if not already there
+            profile = Profile.objects.get(user=user)
+            if plid not in profile.liked_playlist:
+                profile.liked_playlist.append(plid)
+                profile.save()
+                
+            return JsonResponse({
+                "status": "success", 
+                "message": "Playlist added to Spotify!",
+                "playlist_id": new_playlist['id'],
+                "playlist_url": new_playlist['external_urls']['spotify']
+            })
+            
+        except Playlist.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "Playlist not found"})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)})
+        
+def signout(request):
+    # Clear all session data
+    request.session.flush()
+    # Redirect to home page
+    return redirect('home')

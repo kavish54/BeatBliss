@@ -1,137 +1,189 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Song Search</title>
-    <link rel="stylesheet" href="{% static 'recommApp/recom-home.css' %}" />
-    <style>
-      /* Popup Styling */
-      .popup-home {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
-        z-index: 999;
-      }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeatBliss - Music Recommender</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'recommApp/recom-home.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♫</text></svg>">
+</head>
+<body class="body-color">
+    <!-- Mobile menu overlay -->
+    <div class="menu-overlay" onclick="toggleMenu()"></div>
 
-      /* Card Styling */
-      .card-home {
-        background: rgba(25, 25, 25, 0.9);
-        padding: 3rem;
-        border-radius: 12px;
-        text-align: center;
-        width: 350px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        margin: 10% auto;
-        position: relative;
-        animation: fadeIn 0.5s;
-      }
-
-      /* Spotify Logo */
-      .spotify-logo {
-        width: 80px;
-        margin-bottom: 15px;
-      }
-
-      /* Headings */
-      h2 {
-        font-size: 20px;
-        margin-bottom: 20px;
-      }
-
-      /* Submit Button */
-      .btn-submit-home {
-        background: #1db954;
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        font-size: 16px;
-        border-radius: 50px;
-        cursor: pointer;
-        width: 100%;
-        transition: 0.3s;
-      }
-
-      .btn-submit-home:hover {
-        background: #17a74b;
-      }
-
-      /* Close Button */
-      .close-btn-home {
-        color: white;
-        font-size: 28px;
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        cursor: pointer;
-        transition: 0.3s;
-      }
-
-      .close-btn-home:hover {
-        color: red;
-      }
-
-      #openPopup{
-        background: #1DB954;
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        font-size: 16px;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: 0.3s;
-        margin-bottom: 30px;
-        margin-top: 30px;
-      }
-
-      /* Animation */
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <nav>
-      <div class="logo">BeatBliss</div>
-      <ul>
-          <li><a href={% url "genreHome" %}>Home</a></li>
-          <li><a href={% url "recHome" %}>Recommender</a></li>
-
+    <nav class="navbar">
+      <div class="left-section">
+          <div class="logo">
+              <span>♫</span>
+              <a href={% url "home" %} class="brand">BeatBliss</a>
+          </div>
+      </div>
+  
+      <div class="button-group">
+          <button><a class="nav-link" href={% url "home" %}>Home</a></button>
+          <button><a class="nav-link" href={% url "genreHome" %}>Genre</a></button>
+          <button><a class="nav-link" href={% url "recHome" %}>Recommender</a></button>
+          <button><a class="nav-link" href="#">About</a></button>
+      </div>
+  
+      <div class="auth">
           {% if request.session.current_user %}
-              <li><a href={% url "profile-page" %}> {{ request.session.current_user }} </a></li>
+          <a href={% url "profile-page" %}
+              ><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img"
+          /></a>
           {% else %}
-              <li><a href={% url "login" %}>Login</a></li>
+          <a href={% url "login" %} class="login-button">Login</a>
           {% endif %}
-      </ul>
-    </nav>
-    {% comment %} <h1>✅ Login Successful</h1> {% endcomment %}
+      </div>
+  </nav>
 
-    <!-- New Popup Trigger Button -->
-     
-    {% comment %} <button id="openPopup">Login with Spotify</button> {% endcomment %}
-
-    {% if request.session.spotify_token %}
-        <h1>✅ Login Successful</h1>
-    {% else %}
-        <button id="openPopup">Login with Spotify</button>
-    {% endif %}
-
-    <div class="search-container">
-        <input type="text" id="search-bar" placeholder="Search for a song..." autocomplete="off">
-    <ul id="suggestions-list"></ul>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <div class="music-visualizer">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <h1>Discover Your Perfect Sound</h1>
+            <p>Find new music based on your favorite songs. Our AI-powered recommendation engine analyzes music patterns to suggest tracks you'll love.</p>
+            
+            <!-- Spotify Login Status -->
+            {% if request.session.spotify_token %}
+                <div class="success-message">
+                    <p>✅ Spotify Connected</p>
+                </div>
+            {% else %}
+                <button id="openPopup" class="spotify-connect-btn">Connect with Spotify</button>
+            {% endif %}
+        </div>
     </div>
 
-    <!-- Popup Card (copied from spotify-popup.html) -->
+    <!-- Search Section -->
+    <div class="search-section">
+        <div class="search-container">
+            <h2>Find Your Next Favorite Song</h2>
+            <p class="search-subtitle">Search for a song to get personalized recommendations</p>
+            
+            <div class="search-box-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search-bar" placeholder="Search for a song..." autocomplete="off">
+            </div>
+            <ul id="suggestions-list"></ul>
+        </div>
+    </div>
+
+    <!-- Results Section - Only shown when analysis is complete -->
+    {% if current %}
+    <div class="result-section" id="result-section">
+        <div class="result-container">
+            <div class="result-box">
+                <h2 class="result-title">Recommended Songs 🎵</h2>
+                
+                <div class="result-visualization">
+                    <div class="result-bar"></div>
+                    <div class="result-bar"></div>
+                    <div class="result-bar"></div>
+                    <div class="result-bar"></div>
+                    <div class="result-bar"></div>
+                    <div class="result-bar"></div>
+                </div>
+                
+                <div class="selected-song">
+                    <h3>Your Selected Song</h3>
+                    <div class="song-card main-song">
+                        {% if current.image %}
+                            <img src="{{ current.image }}" alt="Album Art" class="song-img">
+                        {% else %}
+                            <img src="https://media.tacdn.com/media/attractions-splice-spp-674x446/0b/a9/99/ac.jpg" alt="No Image" class="song-img">
+                        {% endif %}
+                        <div class="song-info">
+                            <div class="song-name">{{ current.name }}</div>
+                            <div class="artist-name">{{ current.artist }}</div>
+                        </div>
+                        <button class="like-button" onclick="likeSong('{{ sid }}')">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="playlist-action">
+                        <a href="{% url 'add_playlist' playlist_id %}" class="add-playlist-btn">
+                            <i class="fas fa-plus"></i> Add to Spotify Playlist
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="recommendations-list">
+                    <h3>Similar Songs You Might Like</h3>
+                    
+                    {% if song_details %}
+                        {% for song in song_details %}
+                            <div class="song-card">
+                                {% if song.image %}
+                                    <img src="{{ song.image }}" alt="Album Art" class="song-img">
+                                {% else %}
+                                    <img src="https://media.tacdn.com/media/attractions-splice-spp-674x446/0b/a9/99/ac.jpg" alt="No Image" class="song-img">
+                                {% endif %}
+                                <div class="song-info">
+                                    <div class="song-name">{{ song.name }}</div>
+                                    <div class="artist-name">{{ song.artist }}</div>
+                                </div>
+                                <button class="like-button" onclick="likeSong('{{ song.id }}')">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="no-results">No recommendations found. Try another song!</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-column">
+          <div class="footer-logo">
+            <span>♫</span>
+            <a href="#">BeatBliss</a>
+          </div>
+          <p>Discover and classify music genres with our advanced AI technology. </p>
+          <p>Perfect for artists, producers, and music enthusiasts.</p>
+          <div class="social-links">
+            <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-spotify"></i></a>
+          </div>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href={% url "home" %}><i class="fas fa-chevron-right"></i> Home</a></li>
+            <li><a href={% url "genreHome" %}><i class="fas fa-chevron-right"></i> Genre</a></li>
+            <li><a href={% url "recHome" %}><i class="fas fa-chevron-right"></i> Recommender</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> About</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="copyright">
+        <p>&copy; 2025 BeatBliss. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Spotify Login Popup -->
     <div id="popupHome" class="popup-home">
       <div class="card-home">
         <span class="close-btn-home">&times;</span>
@@ -140,18 +192,20 @@
           alt="Spotify Logo"
           class="spotify-logo"
         />
-        <h2>Login to Your Spotify Account</h2>
+        <h2>Connect to Your Spotify Account</h2>
+        <p>Get personalized recommendations based on your listening history</p>
         <form action="{% url 'loginauth' %}">
           {% csrf_token %}
           <input
             class="btn-submit-home"
             type="submit"
-            value="Login with Spotify"
+            value="Connect with Spotify"
           />
         </form>
       </div>
     </div>
 
+    <!-- JavaScript for popup functionality -->
     <script>
       // JavaScript for the popup
       const openBtn = document.getElementById("openPopup");
@@ -159,9 +213,11 @@
       const closeBtn = document.querySelector(".close-btn-home");
 
       // Open the popup
-      openBtn.onclick = () => {
-        popup.style.display = "block";
-      };
+      if (openBtn) {
+        openBtn.onclick = () => {
+          popup.style.display = "block";
+        };
+      }
 
       // Close the popup
       closeBtn.onclick = () => {
@@ -176,13 +232,37 @@
       };
     </script>
 
+    <!-- JavaScript for responsive menu -->
+    <script>
+      function toggleMenu() {
+        const hamburger = document.querySelector('.hamburger');
+        const menuOverlay = document.querySelector('.menu-overlay');
+        const buttonGroup = document.querySelector('.button-group');
+        
+        buttonGroup.classList.toggle('active');
+        hamburger.classList.toggle('active');
+        menuOverlay.classList.toggle('active');
+        
+        // Prevent scrolling when menu is open
+        if (buttonGroup.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+      }
+    </script>
+
+    <!-- JavaScript for search functionality -->
     <script>
       // Autocomplete Search Logic
       document
         .getElementById("search-bar")
         .addEventListener("input", function () {
           let query = this.value.trim();
-          if (query.length < 2) return;
+          if (query.length < 2) {
+            document.getElementById("suggestions-list").innerHTML = "";
+            return;
+          }
 
           fetch(`/autocomplete/?q=${query}`)
             .then((response) => response.json())
@@ -190,19 +270,24 @@
               let suggestionsList = document.getElementById("suggestions-list");
               suggestionsList.innerHTML = "";
 
+              if (data.suggestions.length === 0) {
+                suggestionsList.innerHTML = "<li class='no-results-item'>No songs found</li>";
+                return;
+              }
+
               data.suggestions.forEach((song) => {
                 let sid = song.id;
                 let url = `/results/${sid}/`;
                 let listItem = document.createElement("li");
                 listItem.innerHTML = `
-                            <a href="${url}">
-                                <img src="${song.image}" class="song-img">
-                                <div class="song-text">
-                                    <strong>${song.name}</strong> <br>
-                                    <small>${song.artist}</small>
-                                </div>
-                            </a>
-                        `;
+                    <a href="${url}">
+                        <img src="${song.image}" class="song-img">
+                        <div class="song-text">
+                            <strong>${song.name}</strong> <br>
+                            <small>${song.artist}</small>
+                        </div>
+                    </a>
+                `;
                 suggestionsList.appendChild(listItem);
               });
             })
@@ -210,7 +295,66 @@
               console.error("Error fetching autocomplete:", error)
             );
         });
-    </script>
+        
+      // Function to like a song
+      function likeSong(songId) {
+        fetch('/like-song/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+          },
+          body: JSON.stringify({
+            song_id: songId
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'success') {
+            alert('Song added to your liked songs!');
+          } else {
+            alert('Error: ' + data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while liking the song.');
+        });
+      }
+      function toggleMenu() {
+        const navLinks = document.querySelector('.nav-links');
+        const hamburger = document.querySelector('.hamburger');
+        const menuOverlay = document.querySelector('.menu-overlay');
+        const buttonGroup = document.querySelector('.button-group');
+        
+        buttonGroup.classList.toggle('active');
+        hamburger.classList.toggle('active');
+        menuOverlay.classList.toggle('active');
+        
+        // Prevent scrolling when menu is open
+        if (buttonGroup.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+    }
     
-  </body>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add hamburger menu element if not already in HTML
+        if (!document.querySelector('.hamburger')) {
+            const navbar = document.querySelector('.navbar');
+            const hamburger = document.createElement('div');
+            hamburger.className = 'hamburger';
+            
+            for (let i = 0; i < 3; i++) {
+                const bar = document.createElement('div');
+                hamburger.appendChild(bar);
+            }
+            
+            hamburger.addEventListener('click', toggleMenu);
+            navbar.appendChild(hamburger);
+        }
+    });
+    </script>
+</body>
 </html>

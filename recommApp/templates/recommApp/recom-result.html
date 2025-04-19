@@ -1,65 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recom-Result</title>
-</head>
-<body>
-    <h1>Recom Result page</h1>
-    <a href="{% url "add_playlist" playlist_id %}">Add to Playlist</a>
-    {{ sid }}
-    <br>
-    {% for song in recommendations %}
-    <h3>{{ song.song_name }}</h3>
-    <h3> {{ song.song_id }} </h3>
-    {% endfor %}
-</body>
-</html> 
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recom-Result</title>
-    <script>
-        function likeSong(songId) {
-            fetch("/like-song/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token }}"
-                },
-                body: JSON.stringify({ song_id: songId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "success") {
-                    alert("Song added to Liked Songs on Spotify!");
-                } else {
-                    alert("Error: " + data.message);
-                }
-            })
-            .catch(error => console.error("Error:", error));
-        }
-    </script>
-</head>
-<body>
-    <h1>Recom Result Page</h1>
-    <a href="{% url 'add_playlist' playlist_id %}">Add Playlist</a>
-    <br> Song ID: {{ sid }} <br>
-
-    {% for song in recommendations %}
-        <h3>{{ song.song_name }}</h3>
-        <h3>{{ song.song_id }}</h3>
-        <button onclick="likeSong('{{ song.song_id }}')">❤️ Like</button>
-        <br>
-    {% endfor %}
-</body>
-</html> -->
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -68,65 +6,143 @@
     <title>Recommended Songs</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'recommApp/recom-result.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <nav>
-        <div class="logo">BeatBliss</div>
-        <ul>
-            <li><a href={% url "genreHome" %}>Home</a></li>
-            <li><a href={% url "recHome" %}>Recommender</a></li>
+    <!-- Mobile menu overlay -->
+<div class="menu-overlay" onclick="toggleMenu()"></div>
 
-            {% if request.session.current_user %}
-                <li><a href={% url "profile-page" %}> {{ request.session.current_user }} </a></li>
-            {% else %}
-                <li><a href={% url "login" %}>Login</a></li>
-            {% endif %}
-        </ul>
-    </nav>
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="left-section">
+        <div class="logo">
+            <span>♫</span>
+            <a href="#" class="brand">BeatBliss</a>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <button><a class="nav-link" href={% url "home" %}>Home</a></button>
+        <button><a class="nav-link" href={% url "genreHome" %}>Genre</a></button>
+        <button><a class="nav-link" href={% url "recHome" %}>Recommender</a></button>
+        <button><a class="nav-link" href="#">About</a></button>
+    </div>
+
+    <div class="auth">
+        {% if request.session.current_user %}
+        <a href={% url "profile-page" %}
+            ><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img"
+        /></a>
+        {% else %}
+        <a href={% url "login" %} class="login-button">Login</a>
+           
+        {% endif %}
+    </div>
+</nav>
 
     <h1>🎶 Recommended Songs</h1>
 
     <div class="container">
-        <!-- <p>Selected Song ID: <strong>{{ sid }}</strong></p> -->
          <div class='top-content'>
             <h2>Your song:</h2>
-            <button class='like-button-pl'><a class='like-playlist' href="{% url 'add_playlist' playlist_id %}">Add Playlist</a></button>
-         </div>
+            <button class='add-playlist-btn' onclick="addToPlaylist('{{ playlist_id }}'); return false;">Add to Spotify Playlist</button>
+        </div>
          
         <div class="song-card">
-            {% if current.image %}
-                <img src="{{ current.image }}" alt="Album Art">
-            {% else %}
-                <img src="https://media.tacdn.com/media/attractions-splice-spp-674x446/0b/a9/99/ac.jpg" alt="No Image">
-            {% endif %}
             <div class="song-info">
-                <div class="song-name">{{ current.name }}</div>
-                <div class="artist-name"> {{ current.artist }} </div>
-            </div>
-            <button class="like-button" onclick="likeSong('{{ sid }}')">❤️</button>
-        </div>
-        <div class="top-content">
-            <h2>Similar songs:</h2>
-        </div>
-        {% if song_details %}
-            {% for song in song_details %}
-                <div class="song-card">
-                    {% if song.image %}
-                        <img src="{{ song.image }}" alt="Album Art">
+                {% comment %} <div class="song-image">
+                    {% if current.image %}
+                        <img src="{{ current.image }}" alt="Album Art">
                     {% else %}
                         <img src="https://media.tacdn.com/media/attractions-splice-spp-674x446/0b/a9/99/ac.jpg" alt="No Image">
                     {% endif %}
-                    <div class="song-info">
-                        <div class="song-name">{{ song.name }}</div>
-                        <div class="artist-name"> {{ song.artist }} </div>
-                    </div>
-                    <button class="like-button" onclick="likeSong('{{ song.id }}')">❤️</button>
+                </div> {% endcomment %}
+                {% comment %} <div class="song-details">
+                    <div class="song-name">{{ current.name }}</div>
+                    <div class="artist-name">{{ current.artist }}</div>
+                </div> {% endcomment %}
+            </div>
+            
+            <div class="song-controls">
+                <div class="spotify-embed">
+                    <iframe src="https://open.spotify.com/embed/track/{{ sid }}?utm_source=generator" 
+                            width="100%" 
+                            height="155" 
+                            frameborder="0" 
+                            allowtransparency="true" 
+                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                            loading="lazy">
+                    </iframe>
                 </div>
-            {% endfor %}
+            </div>
+            
+            <div class="song-actions">
+                <button class="like-button" onclick="likeSong('{{ sid }}')"><i class="fas fa-heart"></i> Like</button>
+                <a href="{{ current.spotify_url }}" target="_blank" class="spotify-link"><i class="fab fa-spotify"></i> Open in Spotify</a>
+            </div>
+        </div>
+        
+        <div class="top-content">
+            <h2>Similar songs:</h2>
+        </div>
+        
+        {% if song_details %}
+            <div class="recommendations-container">
+                {% for song in song_details %}
+                    <div class="song-card">
+                        {% comment %} <div class="song-info">
+                            <div class="song-image">
+                                {% if song.image %}
+                                    <img src="{{ song.image }}" alt="Album Art">
+                                {% else %}
+                                    <img src="https://media.tacdn.com/media/attractions-splice-spp-674x446/0b/a9/99/ac.jpg" alt="No Image">
+                                {% endif %}
+                            </div>
+                            <div class="song-details">
+                                <div class="song-name">{{ song.name }}</div>
+                                <div class="artist-name">{{ song.artist }}</div>
+                            </div>
+                        </div> {% endcomment %}
+                        
+                        <div class="song-controls">
+                            <div class="spotify-embed">
+                                <iframe src="https://open.spotify.com/embed/track/{{ song.id }}" 
+                                        width="100%" 
+                                        height="155" 
+                                        frameborder="0" 
+                                        allowtransparency="true" 
+                                        allow="encrypted-media">
+                                </iframe>
+                            </div>
+                        </div>
+                        
+                        <div class="song-actions">
+                            <button class="like-button" onclick="likeSong('{{ song.id }}')"><i class="fas fa-heart"></i> Like</button>
+                            <a href="{{ song.spotify_url }}" target="_blank" class="spotify-link"><i class="fab fa-spotify"></i> Open in Spotify</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         {% else %}
             <p>No recommendations found.</p>
         {% endif %}
     </div>
+
+    <div id="toast-notification" class="toast-notification">
+        <div class="toast-content">
+            <i class="fas fa-check-circle toast-icon"></i>
+            <div class="toast-message">Playlist added successfully!</div>
+        </div>
+    </div>
+    <div id="playlist-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Name Your Playlist</h3>
+            <input type="text" id="playlist-name" placeholder="Enter playlist name">
+            <button id="create-playlist-btn">Create Playlist</button>
+        </div>
+    </div>
+    
     <script>
         function likeSong(songId) {
             fetch("/like-song/", {
@@ -140,13 +156,157 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === "success") {
-                    alert("Song added to Liked Songs on Spotify!");
+                    showToast("Song added to your liked songs!");
                 } else {
-                    alert("Error: " + data.message);
+                    showToast("Error: " + data.message, "error");
                 }
             })
-            .catch(error => console.error("Error:", error));
+            .catch(error => {
+                console.error("Error:", error);
+                showToast("An error occurred while liking the song.", "error");
+            });
         }
+        
+        function addToPlaylist(playlistId) {
+            // Show the modal instead of immediately creating the playlist
+            const modal = document.getElementById('playlist-modal');
+            const playlistNameInput = document.getElementById('playlist-name');
+            const createPlaylistBtn = document.getElementById('create-playlist-btn');
+            const closeModal = document.querySelector('.close-modal');
+            
+            // Set default playlist name
+            playlistNameInput.value = "BeatBliss: {{ current.name }}";
+            
+            // Show the modal
+            modal.style.display = "block";
+            
+            // Focus on the input
+            playlistNameInput.focus();
+            playlistNameInput.select();
+            
+            // Close modal when clicking the X
+            closeModal.onclick = function() {
+                modal.style.display = "none";
+            }
+            
+            // Close modal when clicking outside
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+            
+            // Create playlist when button is clicked
+            createPlaylistBtn.onclick = function() {
+                const playlistName = playlistNameInput.value.trim();
+                if (!playlistName) {
+                    showToast("Please enter a playlist name", "error");
+                    return;
+                }
+                
+                createSpotifyPlaylist(playlistId, playlistName);
+                modal.style.display = "none";
+            }
+            
+            // Also handle Enter key
+            playlistNameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    createPlaylistBtn.click();
+                }
+            });
+        }
+        
+        function createSpotifyPlaylist(playlistId, playlistName) {
+            showToast("Creating playlist on Spotify...", "info");
+            
+            fetch(`/added/${playlistId}/`, {
+                method: "POST",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({
+                    playlist_name: playlistName
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    showToast(data.message);
+                } else {
+                    showToast("Error: " + data.message, "error");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                showToast("An error occurred while adding the playlist.", "error");
+            });
+        }
+        
+        
+        function showToast(message, type = "success") {
+            const toast = document.getElementById("toast-notification");
+            const toastMessage = document.querySelector(".toast-message");
+            const toastIcon = document.querySelector(".toast-icon");
+            
+            toastMessage.textContent = message;
+            
+            // Reset classes
+            toast.classList.remove("error", "info", "success");
+            
+            // Add appropriate class based on type
+            toast.classList.add(type);
+            
+            // Update icon based on type
+            if (type === "error") {
+                toastIcon.className = "fas fa-exclamation-circle toast-icon";
+            } else if (type === "info") {
+                toastIcon.className = "fas fa-info-circle toast-icon";
+            } else {
+                toastIcon.className = "fas fa-check-circle toast-icon";
+            }
+            
+            toast.classList.add("show");
+            
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const hamburger = document.querySelector('.hamburger');
+            const menuOverlay = document.querySelector('.menu-overlay');
+            const buttonGroup = document.querySelector('.button-group');
+            
+            buttonGroup.classList.toggle('active');
+            hamburger.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+            
+            // Prevent scrolling when menu is open
+            if (buttonGroup.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hamburger menu element if not already in HTML
+            if (!document.querySelector('.hamburger')) {
+                const navbar = document.querySelector('.navbar');
+                const hamburger = document.createElement('div');
+                hamburger.className = 'hamburger';
+                
+                for (let i = 0; i < 3; i++) {
+                    const bar = document.createElement('div');
+                    hamburger.appendChild(bar);
+                }
+                
+                hamburger.addEventListener('click', toggleMenu);
+                navbar.appendChild(hamburger);
+            }
+        });
     </script>
 </body>
 </html>

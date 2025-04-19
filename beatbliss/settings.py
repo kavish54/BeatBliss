@@ -141,5 +141,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'loginApp.User'
 
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS = "default"  # Uses Django's default cache system
+# SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+# SESSION_CACHE_ALIAS = "default"  # Uses Django's default cache system
+
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'mihirpatel3592@gmail.com'  # Replace with your email
+EMAIL_HOST_PASSWORD = 'azfo oflh xszf dmyi'  # Replace with your email password
+DEFAULT_FROM_EMAIL = 'no-reply@example.com'

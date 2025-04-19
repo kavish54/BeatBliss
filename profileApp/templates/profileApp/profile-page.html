@@ -7,9 +7,32 @@
     {% load static %}
     <link rel="stylesheet" href={% static "profileApp/profile-page.css" %}>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-
+    <div class="menu-overlay" onclick="toggleMenu()"></div>
+    <nav class="navbar">
+        <div class="left-section">
+            <div class="logo">
+                <span>♫</span>
+                <a href="#" class="brand">BeatBliss</a>
+            </div>
+        </div>
+    
+        <div class="button-group">
+            <button><a class="nav-link" href={% url "home" %}>Home</a></button>
+            <button><a class="nav-link" href={% url "genreHome" %}>Genre</a></button>
+            <button><a class="nav-link" href={% url "recHome" %}>Recommender</a></button>
+            <button><a class="nav-link" href="#">About</a></button>
+        </div>
+    
+        <div class="auth">
+            <a href={% url "profile-page" %}
+                ><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img"
+            /></a>
+            <a href="{% url 'signout' %}" class="logout-button">Logout</a>
+        </div>
+    </nav>
     <!-- Profile Section -->
     <div class="profile-container">
         <img src="https://media.istockphoto.com/id/1403500817/photo/the-craggies-in-the-blue-ridge-mountains.jpg?s=612x612&w=0&k=20&c=N-pGA8OClRVDzRfj_9AqANnOaDS3devZWwrQNwZuDSk=" alt="Profile Photo" class="profile-photo">
@@ -25,17 +48,19 @@
         {% if playlist_dict %}
             {% for playlist_id, playlist in playlist_dict.items %}  
                 <div class="song-box">
-                    <div class="song-header toggle-btn">
+                    <div class="song-header">
                         <span>Playlist ID: {{ playlist_id }}</span>
-                        <button class="toggle-icon">▼</button>
+                        <button class="toggle-icon toggle-btn">▼</button>
                     </div>
                     <div class="recommendations">
+                        <button class="like-button" onclick="likePlaylist('{{ playlist_id }}')">Add to spotify</button>
                         {% for song in playlist.songs %}
                             <div class="song">
                                 <img src="{{ song.image_url }}" alt="Song Cover" class="song-img">
                                 <div>
                                     <strong>{{ song.title }}</strong> - {{ song.artist }}<br>
                                 </div>
+                                <button class="like-button" onclick="likeSong('{{ song.spotify_id }}')">❤️</button>
                             </div>
                         {% endfor %}
                     </div>
@@ -52,17 +77,19 @@
         {% if history_dict %}
             {% for playlist_id, playlist in history_dict.items %}  
                 <div class="song-box">
-                    <div class="song-header toggle-btn">
+                    <div class="song-header">
                         <span>Playlist ID: {{ playlist_id }}</span>
-                        <button class="toggle-icon">▼</button>
+                        <button class="toggle-icon toggle-btn">▼</button>
                     </div>
                     <div class="recommendations">
+                        <button class="like-button" onclick="likePlaylist('{{ playlist_id }}')">Add to spotify</button>
                         {% for song in playlist.songs %}
                             <div class="song">
                                 <img src="{{ song.image_url }}" alt="Song Cover" class="song-img">
                                 <div>
                                     <strong>{{ song.title }}</strong> - {{ song.artist }}<br>
                                 </div>
+                                <button class="like-button" onclick="likeSong('{{ song.spotify_id }}')">❤️</button>
                             </div>
                         {% endfor %}
                     </div>
@@ -73,15 +100,25 @@
         {% endif %}
     </div>
 
-    <script>
-        $(document).ready(function() {
-            $(".toggle-btn").click(function() {
-                $(this).closest(".song-box").find(".recommendations").slideToggle();
-            });
-        });
-    </script>
+    <!-- Modal dialog for playlist naming -->
+    <div id="playlist-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Name Your Playlist</h3>
+            <input type="text" id="playlist-name" placeholder="Enter playlist name">
+            <button id="create-playlist-btn">Create Playlist</button>
+        </div>
+    </div>
+    
+    <!-- Toast notification -->
+    <div id="toast-notification" class="toast-notification">
+        <div class="toast-content">
+            <i class="fas fa-check-circle toast-icon"></i>
+            <div class="toast-message">Playlist added successfully!</div>
+        </div>
+    </div>
 
-    {% comment %} <div class="section">
+    <div class="section">
         <h3>Your Liked Songs</h3>
         {% if liked_songs %}
             <div class="liked-songs-container">
@@ -92,34 +129,184 @@
                             <strong>{{ song.title }}</strong> - {{ song.artist }}<br>
                         </div>
                     </div>
+                    {% if forloop.counter|divisibleby:6 %}
+                        <div class="clear"></div> <!-- Ensures a new row starts after every 6 songs -->
+                    {% endif %}
                 {% endfor %}
             </div>
         {% else %}
             <p>No liked songs found.</p>
         {% endif %}
-    </div> {% endcomment %}
-    <!-- Liked Songs Section -->
-<div class="section">
-    <h3>Your Liked Songs</h3>
-    {% if liked_songs %}
-        <div class="liked-songs-container">
-            {% for song_id, song in liked_songs.items %}
-                <div class="liked-song">
-                    <img src="{{ song.image_url }}" alt="Song Cover" class="song-img">
-                    <div>
-                        <strong>{{ song.title }}</strong> - {{ song.artist }}<br>
-                    </div>
-                </div>
-                {% if forloop.counter|divisibleby:6 %}
-                    <div class="clear"></div> <!-- Ensures a new row starts after every 6 songs -->
-                {% endif %}
-            {% endfor %}
-        </div>
-    {% else %}
-        <p>No liked songs found.</p>
-    {% endif %}
-</div>
+    </div>
 
-
+    <script>
+        $(document).ready(function() {
+            // Fix toggle functionality
+            $(".toggle-btn").click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Find the recommendations div within the closest song-box
+                const recommendations = $(this).closest(".song-box").find(".recommendations");
+                
+                // Toggle the recommendations
+                recommendations.slideToggle();
+                
+                // Toggle the icon
+                if ($(this).text() === "▼") {
+                    $(this).text("▲");
+                } else {
+                    $(this).text("▼");
+                }
+            });
+            
+            // Prevent song-header clicks from propagating
+            $(".song-header").click(function(e) {
+                if (e.target === this) {
+                    $(this).find(".toggle-btn").click();
+                }
+            });
+            
+            // Initialize - hide all recommendations initially
+            $(".recommendations").hide();
+        });
+        
+        function likeSong(songId) {
+            showToast("Adding song to your liked songs...", "info");
+            
+            fetch("/like-song/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({ song_id: songId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    showToast("Song added to your liked songs!");
+                } else {
+                    showToast("Error: " + data.message, "error");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                showToast("An error occurred while liking the song.", "error");
+            });
+        }
+        
+        function likePlaylist(plId) {
+            // Show the modal instead of immediately creating the playlist
+            const modal = document.getElementById('playlist-modal');
+            const playlistNameInput = document.getElementById('playlist-name');
+            const createPlaylistBtn = document.getElementById('create-playlist-btn');
+            const closeModal = document.querySelector('.close-modal');
+            
+            // Set default playlist name
+            playlistNameInput.value = "BeatBliss Playlist";
+            
+            // Show the modal
+            modal.style.display = "block";
+            
+            // Focus on the input
+            playlistNameInput.focus();
+            playlistNameInput.select();
+            
+            // Close modal when clicking the X
+            closeModal.onclick = function() {
+                modal.style.display = "none";
+            }
+            
+            // Close modal when clicking outside
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+            
+            // Create playlist when button is clicked
+            createPlaylistBtn.onclick = function() {
+                const playlistName = playlistNameInput.value.trim();
+                if (!playlistName) {
+                    showToast("Please enter a playlist name", "error");
+                    return;
+                }
+                
+                createSpotifyPlaylist(plId, playlistName);
+                modal.style.display = "none";
+            }
+            
+            // Also handle Enter key
+            playlistNameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    createPlaylistBtn.click();
+                }
+            });
+        }
+        
+        function createSpotifyPlaylist(plId, playlistName) {
+            showToast("Creating playlist on Spotify...", "info");
+            
+            fetch("/like-playlist/", {
+                method: "POST",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({
+                    pl_id: plId,
+                    playlist_name: playlistName
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    showToast(data.message);
+                } else if (data.status === "auth_required") {
+                    showToast("Please log in to Spotify first", "info");
+                    setTimeout(() => {
+                        window.location.href = data.auth_url;
+                    }, 2000);
+                } else {
+                    showToast("Error: " + data.message, "error");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                showToast("An error occurred while adding the playlist.", "error");
+            });
+        }
+        
+        function showToast(message, type = "success") {
+            const toast = document.getElementById("toast-notification");
+            const toastMessage = document.querySelector(".toast-message");
+            const toastIcon = document.querySelector(".toast-icon");
+            
+            toastMessage.textContent = message;
+            
+            // Reset classes
+            toast.classList.remove("error", "info", "success");
+            
+            // Add appropriate class based on type
+            toast.classList.add(type);
+            
+            // Update icon based on type
+            if (type === "error") {
+                toastIcon.className = "fas fa-exclamation-circle toast-icon";
+            } else if (type === "info") {
+                toastIcon.className = "fas fa-info-circle toast-icon";
+            } else {
+                toastIcon.className = "fas fa-check-circle toast-icon";
+            }
+            
+            toast.classList.add("show");
+            
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
+    </script>
 </body>
 </html>

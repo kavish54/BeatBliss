@@ -11,28 +11,29 @@ from spotipy.oauth2 import SpotifyOAuth,SpotifyClientCredentials
 from django.http import HttpResponse, JsonResponse
 
 from loginApp.forms import User
+from profileApp.models import Profile
 from recommApp.models import Playlist
 from recommApp.utils.recomFinder import load_knn_model, recommend_songs, train_and_save_knn_model
 
 import json
 from django.http import JsonResponse
 
-os.environ['SPOTIPY_CLIENT_ID'] = 'cfd82609829c4df08e69069c5c37e201'
-os.environ['SPOTIPY_CLIENT_SECRET'] = '0cc553a74abf4a328b0cd70a661fd01f'
+os.environ['SPOTIPY_CLIENT_ID'] = '7d014370fbc24589848407b92579c6e7'
+os.environ['SPOTIPY_CLIENT_SECRET'] = '2e0b934440ab44eab116a6b87e7ac3cf'
 os.environ['SPOTIPY_REDIRECT_URI'] = 'http://127.0.0.1:8000/callback'
 
 # Create your views here.
 
 sp = spotipy.Spotify(
     auth_manager=SpotifyClientCredentials(
-        client_id='cfd82609829c4df08e69069c5c37e201',
-        client_secret='0cc553a74abf4a328b0cd70a661fd01f'
-    )
+        client_id='7d014370fbc24589848407b92579c6e7',
+        client_secret='2e0b934440ab44eab116a6b87e7ac3cf'
+    )   
 )
 
 def recomHome(request):
-    if 'spotify_token' in request.session:
-        del request.session['spotify_token']
+    # if 'spotify_token' in request.session:
+        # del request.session['spotify_token']
     return render(request,'recommApp/recom-home.html',context = {})
 
 # user-library-read add in below
@@ -43,7 +44,7 @@ def loginauth(request):
         client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
         redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI"),
         scope=scope,
-        show_dialog=True
+        # show_dialog=True
     )
 
 
@@ -136,7 +137,6 @@ def show_recommendations(request,sid):
     if nn_model is None:
         nn_model, feature_matrix = train_and_save_knn_model(merged_df)
 
-    # song_name = "The Middle" 
     recommendations = recommend_songs(sid, merged_df, nn_model, feature_matrix, 5)
 
     track = sp.track(sid)
@@ -146,8 +146,10 @@ def show_recommendations(request,sid):
         "artist": ", ".join(artist['name'] for artist in track['artists']),
         "album": track['album']['name'],
         "image": track['album']['images'][0]['url'] if track['album']['images'] else "",
-        "spotify_url": track['external_urls']['spotify']
+        "spotify_url": track['external_urls']['spotify'],
+        "preview_url": track['preview_url']
     })
+    print(current_song["preview_url"])
     suggested = []
     song_details = []
     for song in recommendations:
@@ -159,7 +161,8 @@ def show_recommendations(request,sid):
             "artist": ", ".join(artist['name'] for artist in track['artists']),
             "album": track['album']['name'],
             "image": track['album']['images'][0]['url'] if track['album']['images'] else "",
-            "spotify_url": track['external_urls']['spotify']
+            "spotify_url": track['external_urls']['spotify'],
+            "preview_url": track['preview_url']  # Added preview URL
         })
         suggested.append(song["song_id"])
 
@@ -188,48 +191,89 @@ def spotify_login(request):  # This handles the login page
     return render(request, "recommApp/spotify-login.html")
 
 
-def add_playlist_spotify(request,plid):
+def add_playlist_spotify(request, plid):
     token_info = request.session.get("spotify_token")
     spotify_user_id = request.session.get("spotify_user_id")
 
     if not token_info or not spotify_user_id:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                "status": "error", 
+                "message": "User not authenticated with Spotify"
+            })
         return HttpResponse("User not authenticated with Spotify", status=401)
     
-    sp = spotipy.Spotify(auth=token_info["access_token"])
+    try:
+        sp = spotipy.Spotify(auth=token_info["access_token"])
+        playlist = Playlist.objects.get(playlistID=plid)
 
-    playlist = Playlist.objects.get(playlistID=plid)
+        track_uris = []
+        track_uris.append(f"spotify:track:{playlist.songID}")
+        for song_id in playlist.recommSongs:
+            track_uris.append(f"spotify:track:{song_id}")  # Spotify URIs format
 
-    track_uris = []
-    for song_id in playlist.recommSongs:
-        track_uris.append(f"spotify:track:{song_id}")  # Spotify URIs format
-    track_uris.append(f"spotify:track:{playlist.songID}")
-    print("Track URIs:", track_uris)
+        # Get custom playlist name if provided
+        if request.method == "POST":
+            data = json.loads(request.body)
+            playlist_name = data.get("playlist_name", f"BeatBliss: {playlist.songID}")
+        else:
+            playlist_name = f"BeatBliss: {playlist.songID}"
 
-    # Create a new playlist in the user's Spotify account
-    new_playlist = sp.user_playlist_create(
-        user=spotify_user_id,
-        name=f"BeatBliss: {playlist.songID}",
-        public=False,
-        description="Recommended songs playlist from BeatBliss"
-    )
+        # Create a new playlist in the user's Spotify account
+        new_playlist = sp.user_playlist_create(
+            user=spotify_user_id,
+            name=playlist_name,
+            public=False,
+            description="Recommended songs playlist from BeatBliss"
+        )
 
-    sp.playlist_add_items(new_playlist['id'], track_uris)
-
-    return HttpResponse(f"<h1>Added Playlist to Spotify!</h1>Playlist ID: {new_playlist['id']}<br>Tracks: {track_uris}")
+        sp.playlist_add_items(new_playlist['id'], track_uris)
+        
+        # Check if this is an AJAX request
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                "status": "success",
+                "message": "Playlist added to your Spotify account!",
+                "playlist_id": new_playlist['id'],
+                "playlist_url": new_playlist['external_urls']['spotify']
+            })
+            
+        # For non-AJAX requests, return the original response
+        return HttpResponse(f"<h1>Added Playlist to Spotify!</h1>Playlist ID: {new_playlist['id']}<br>Tracks: {track_uris}")
+        
+    except Playlist.DoesNotExist:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                "status": "error",
+                "message": "Playlist not found"
+            })
+        return HttpResponse("Playlist not found", status=404)
+        
+    except Exception as e:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                "status": "error",
+                "message": str(e)
+            })
+        return HttpResponse(f"Error: {str(e)}", status=500)
 
 def like_song(request):
     if request.method == "POST":
         data = json.loads(request.body)
         song_id = data.get("song_id")
-
+        user = request.session.get("current_user")
         token_info = request.session.get("spotify_token")
         if not token_info:
             return JsonResponse({"status": "error", "message": "User not authenticated with Spotify"}, status=401)
 
         sp = spotipy.Spotify(auth=token_info["access_token"])
-        
+        print(song_id+"gujaasananan")
         try:
+            print(song_id+"dasananan")
             sp.current_user_saved_tracks_add([song_id])
+            profile = Profile.objects.get(user=user)
+            profile.liked_song_list.append(song_id)
+            profile.save()
             return JsonResponse({"status": "success", "message": "Song added to Liked Songs"})
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)

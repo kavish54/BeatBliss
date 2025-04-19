@@ -1,3 +1,82 @@
+{% comment %} {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In</title>
+    <link rel="stylesheet" href="{% static 'loginApp/sign-in.css' %}" />
+    <style>
+      .error-message {
+        background: rgba(255, 0, 0, 0.1); /* Light red background */
+        color: #d9534f; /* Red text */
+        border-left: 4px solid #d9534f; /* Red left border */
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      .error-text {
+        display: block;
+        color: #d9534f; /* Red error text */
+        font-size: 0.85rem;
+        margin-top: 5px;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="left-section"></div>
+      <div class="right-section">
+        <div style="text-align: center; margin-bottom: 1rem">
+          <h1>Log In</h1>
+        </div>
+
+        <form method="POST" class="Userfield">
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+          <div class="error-message">
+            <ul>
+              {% for error in form.non_field_errors %}
+              <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+
+          <div class="form-group">
+            {{ form.username.label_tag }}
+            {{ form.username }}
+            {% if form.username.errors %}
+              <small class="error-text">{{ form.username.errors.0 }}</small>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            {{ form.password.label_tag }}
+            {{ form.password }}
+            {% if form.password.errors %}
+              <small class="error-text">{{ form.password.errors.0 }}</small>
+            {% endif %}
+          </div>
+
+          <button type="submit" class="create-btn">Sign In</button>
+
+          <p id="SignUp-button" style="text-align: center">
+            Don't have an account?
+            <a href="{% url 'register' %}" id="underline">Sign Up</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </body>
+</html> {% endcomment %}
+
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -69,6 +148,12 @@
           <p id="SignUp-button" style="text-align: center">
             Don't have an account?
             <a href="{% url 'register' %}" id="underline">Sign Up</a>
+          </p>
+          <br>
+          <!-- Forgot Password Link -->
+          <p id="ForgotPassword-button" style="text-align: center">
+            Forgot your password?
+            <a href="{% url 'password_reset' %}" id="underline">Click here to reset</a>
           </p>
         </form>
       </div>

@@ -1,0 +1,162 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeatBliss - Music Recommendation</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'genreApp/home.css' %}">
+</head>
+<body class="body-color">
+    <!-- Mobile menu overlay -->
+    <div class="menu-overlay" onclick="toggleMenu()"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="left-section">
+            <div class="logo">
+                <span>♫</span>
+                <a href="#" class="brand">BeatBliss</a>
+            </div>
+        </div>
+    
+        <div class="button-group">
+            <button><a class="nav-link" href={% url "home" %}>Home</a></button>
+            <button><a class="nav-link" href={% url "genreHome" %}>Genre</a></button>
+            <button><a class="nav-link" href={% url "recHome" %}>Recommender</a></button>
+            <button><a class="nav-link" onclick="scrollToSectionB()">About</a></button>
+        </div>
+    
+        <div class="auth">
+            {% if request.session.current_user %}
+            <a href={% url "profile-page" %}
+                ><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img"
+            /></a>
+            {% else %}
+            <a href={% url "login" %} class="login-button">Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="hero-content">
+            <div class="music-visualizer">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <h1 class="hero-title">Your Music, Our AI - Perfect Harmony</h1>
+            <h2 class="hero-subtitle">Hit Explore and let AI guide your Music journey!</h2>
+            <button class="explore-btn" onclick="scrollToSection()">Explore</button>
+        </div>
+    </section>
+    
+    <!-- Genre Section -->
+    <section class="content-section-a">
+        <div class="image-container">
+            <img src="https://i.pinimg.com/474x/d1/79/c5/d179c5c424ed339058effcb85c3f0f49.jpg" alt="Genre">
+        </div>
+        <div class="text-container">
+            <h2>Discover Genres</h2>
+            <p>Ever Wondered What Genre Your Song Belongs To? Find Out Now!</p>
+            <a href={% url "genreHome" %} class="go-btn">Go to Genre</a>
+        </div>
+    </section>
+
+    <!-- Recommender Section -->
+    <section class="content-section-b">
+        <div class="text-container">
+            <h2>Get Personalized Recommendations</h2>
+            <p>Get personalized music recommendations based on your favorite tracks. 
+              Simply search for a song, explore similar suggestions, and save your favorites directly to Spotify. 
+            </p>
+            <a href={% url "recHome" %} class="go-btn">Go to Recommender</a>
+        </div>
+        <div class="image-container">
+            <img src="{% static 'genreApp/images/recimage.png' %}" alt="Recommender">
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer id='ftr' class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <div class="footer-logo">
+                    <span>♫</span>
+                    <a href="#">BeatBliss</a>
+                </div>
+                <p>Discover and classify music genres with our advanced AI technology.</p>
+                <p>Perfect for artists, producers, and music enthusiasts.</p>
+                <div class="social-links">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-spotify"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href={% url "home" %}><i class="fas fa-chevron-right"></i> Home</a></li>
+                    <li><a href={% url "genreHome" %}><i class="fas fa-chevron-right"></i> Genre</a></li>
+                    <li><a href={% url "recHome" %}><i class="fas fa-chevron-right"></i> Recommender</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> About</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2025 BeatBliss. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function scrollToSection() {
+            document.querySelector(".content-section-a").scrollIntoView({ behavior: "smooth" });
+        }
+        function scrollToSectionB() {
+            document.querySelector(".footer").scrollIntoView({ behavior: "smooth" });
+        }
+        
+        function toggleMenu() {
+            const buttonGroup = document.querySelector('.button-group');
+            const hamburger = document.querySelector('.hamburger');
+            const menuOverlay = document.querySelector('.menu-overlay');
+            
+            buttonGroup.classList.toggle('active');
+            hamburger.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+            
+            // Prevent scrolling when menu is open
+            if (buttonGroup.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hamburger menu element if not already in HTML
+            if (!document.querySelector('.hamburger')) {
+                const navbar = document.querySelector('.navbar');
+                const hamburger = document.createElement('div');
+                hamburger.className = 'hamburger';
+                
+                for (let i = 0; i < 3; i++) {
+                    const bar = document.createElement('div');
+                    hamburger.appendChild(bar);
+                }
+                
+                hamburger.addEventListener('click', toggleMenu);
+                navbar.appendChild(hamburger);
+            }
+        });
+    </script>
+</body>
+</html>
