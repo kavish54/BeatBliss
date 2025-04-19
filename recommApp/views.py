@@ -1,14 +1,11 @@
 from django.conf import settings
-from django.shortcuts import render
-
-# Create your views here.
-
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 import os
 import pandas as pd
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth,SpotifyClientCredentials
+from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 from django.http import HttpResponse, JsonResponse
+from django.contrib import messages
 
 from loginApp.forms import User
 from profileApp.models import Profile
@@ -34,10 +31,15 @@ sp = spotipy.Spotify(
 def recomHome(request):
     # if 'spotify_token' in request.session:
         # del request.session['spotify_token']
-    return render(request,'recommApp/recom-home.html',context = {})
+    return render(request, 'recommApp/recom-home.html', context={})
 
 # user-library-read add in below
 def loginauth(request):
+    # Check if user is logged in
+    if not request.session.get("current_user"):
+        messages.error(request, "Please log in to connect with Spotify")
+        return redirect("login")
+        
     scope = "playlist-modify-private playlist-modify-public user-read-email user-library-modify user-library-read"
     auth = SpotifyOAuth(
         client_id=os.getenv("SPOTIPY_CLIENT_ID"),
@@ -47,12 +49,16 @@ def loginauth(request):
         # show_dialog=True
     )
 
-
     auth_url = auth.get_authorize_url()
     
     return redirect(auth_url)
 
 def spotify_callback(request):
+    # Check if user is logged in
+    if not request.session.get("current_user"):
+        messages.error(request, "Please log in to connect with Spotify")
+        return redirect("login")
+        
     auth = SpotifyOAuth(scope="user-library-read")
     
     # Get authorization code from URL parameters
@@ -73,13 +79,17 @@ def spotify_callback(request):
         playlists = sp.current_user_playlists()
         
         context = {
-            'token':token_info,
-            'user':user,
-            'playlist':playlists
+            'token': token_info,
+            'user': user,
+            'playlist': playlists
         }
-        return render(request,'recommApp/recom-home.html',context)
+        return render(request, 'recommApp/recom-home.html', context)
     
 def spotify_autocomplete(request):
+    # Check if user is logged in
+    if not request.session.get("current_user"):
+        return JsonResponse({"error": "Authentication required"}, status=401)
+        
     query = request.GET.get("q", "").strip().lower()
 
     if not query:
@@ -128,7 +138,11 @@ def spotify_autocomplete(request):
 
     return JsonResponse({"suggestions": suggestions})
 
-def show_recommendations(request,sid):
+def show_recommendations(request, sid):
+    # Check if user is logged in
+    if not request.session.get("current_user"):
+        messages.error(request, "Please log in to view recommendations")
+        return redirect("login")
 
     data_path = os.path.join(settings.MEDIA_ROOT, "datasets/recom_songs.csv")
     merged_df = pd.read_csv(data_path)
@@ -176,22 +190,32 @@ def show_recommendations(request,sid):
     playlist.save()
     
     context = {
-        "sid" : sid,
-        "current" : current_song,
-        "recommendations" : recommendations,
-        "playlist_id" : playlist.playlistID,
-        "song_details" : song_details,
+        "sid": sid,
+        "current": current_song,
+        "recommendations": recommendations,
+        "playlist_id": playlist.playlistID,
+        "song_details": song_details,
     }
-    return render(request,'recommApp/recom-result.html',context=context)
+    return render(request, 'recommApp/recom-result.html', context=context)
 
 def show_popup(request):
-    return render(request,"recommApp/spotify-popup.html")
+    return render(request, "recommApp/spotify-popup.html")
 
 def spotify_login(request):  # This handles the login page
     return render(request, "recommApp/spotify-login.html")
 
 
 def add_playlist_spotify(request, plid):
+    # Check if user is logged in
+    if not request.session.get("current_user"):
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                "status": "error", 
+                "message": "Please log in to add playlists"
+            })
+        messages.error(request, "Please log in to add playlists")
+        return redirect("login")
+        
     token_info = request.session.get("spotify_token")
     spotify_user_id = request.session.get("spotify_user_id")
 
@@ -258,6 +282,10 @@ def add_playlist_spotify(request, plid):
         return HttpResponse(f"Error: {str(e)}", status=500)
 
 def like_song(request):
+    # Check if user is logged in
+    if not request.session.get("current_user"):
+        return JsonResponse({"status": "error", "message": "Please log in to like songs"}, status=401)
+        
     if request.method == "POST":
         data = json.loads(request.body)
         song_id = data.get("song_id")
@@ -277,3 +305,40 @@ def like_song(request):
             return JsonResponse({"status": "success", "message": "Song added to Liked Songs"})
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
+        
+# Add this new function to your views.py file
+
+def like_playlist(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        playlist_id = data.get("playlist_id")
+        print(playlist_id)
+        user_email = request.session.get("current_user")
+        print(user_email)
+        
+        try:
+            # Get the user's profile
+            user_instance = User.objects.get(email=user_email)
+            profile = Profile.objects.get(user=user_email)
+            
+            # Initialize liked_playlist if it doesn't exist
+            if not hasattr(profile, 'liked_playlist') or profile.liked_playlist is None:
+                profile.liked_playlist = []
+            
+            # Check if playlist is already liked
+            if int(playlist_id) not in profile.liked_playlist:
+                # Add playlist ID to liked_playlist
+                profile.liked_playlist.append(int(playlist_id))
+                profile.save()
+                return JsonResponse({"status": "success", "message": "Playlist added to your liked playlists"})
+            else:
+                return JsonResponse({"status": "info", "message": "Playlist already in your liked playlists"})
+                
+        except User.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "User not found"}, status=404)
+        except Profile.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "Profile not found"}, status=404)
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    
+    return JsonResponse({"status": "error", "message": "Invalid request method"}, status=400)

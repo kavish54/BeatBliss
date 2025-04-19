@@ -236,7 +236,7 @@ def login_view(request):
         if user:
             request.session['current_user'] = email  # Store the email in session
             login(request, user)  # Log the user in
-            return redirect('genreHome')  # Redirect to the genre home page
+            return redirect('home')  # Redirect to the genre home page
     return render(request, 'loginApp/sign-in.html', {'form': form})
 
 # Logout view

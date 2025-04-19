@@ -46,7 +46,6 @@ body {
 .logo span {
   font-size: 2rem;
   color: #FF6584;
-  animation: pulse 2s infinite;
 }
 
 @keyframes pulse {

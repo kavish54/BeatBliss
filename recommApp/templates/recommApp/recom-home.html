@@ -75,7 +75,14 @@
             
             <div class="search-box-wrapper">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" id="search-bar" placeholder="Search for a song..." autocomplete="off">
+                {% if request.session.current_user %}
+                    <input type="text" id="search-bar" placeholder="Search for a song..." autocomplete="off">
+                {% else %}
+                    <input type="text" id="search-bar-disabled" placeholder="Login to search for songs" readonly>
+                    <div class="login-overlay">
+                        <a href="{% url 'login' %}" class="login-prompt-btn">Login to Search</a>
+                    </div>
+                {% endif %}
             </div>
             <ul id="suggestions-list"></ul>
         </div>
@@ -255,6 +262,7 @@
     <!-- JavaScript for search functionality -->
     <script>
       // Autocomplete Search Logic
+      {% if request.session.current_user %}
       document
         .getElementById("search-bar")
         .addEventListener("input", function () {
@@ -295,6 +303,14 @@
               console.error("Error fetching autocomplete:", error)
             );
         });
+      {% else %}
+      // For non-logged in users, redirect to login page when clicking on the disabled search bar
+      document
+        .getElementById("search-bar-disabled")
+        .addEventListener("click", function() {
+          window.location.href = "{% url 'login' %}";
+        });
+      {% endif %}
         
       // Function to like a song
       function likeSong(songId) {
@@ -356,5 +372,43 @@
         }
     });
     </script>
+
+    <style>
+      /* Add these styles for the disabled search bar and login overlay */
+      #search-bar-disabled {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #888;
+        cursor: pointer;
+        width: 100%;
+        padding: 15px 20px 15px 50px;
+        border: none;
+        border-radius: 50px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+      
+      .login-overlay {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      
+      .login-prompt-btn {
+        background: linear-gradient(45deg, #FF6584, #7B68EE);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+      
+      .login-prompt-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 101, 132, 0.3);
+      }
+    </style>
 </body>
 </html>
