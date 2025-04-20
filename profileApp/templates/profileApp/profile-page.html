@@ -15,7 +15,7 @@
         <div class="left-section">
             <div class="logo">
                 <span>♫</span>
-                <a href="#" class="brand">BeatBliss</a>
+                <a href={% url "home" %} class="brand">BeatBliss</a>
             </div>
         </div>
     
@@ -49,7 +49,7 @@
             {% for playlist_id, playlist in playlist_dict.items %}  
                 <div class="song-box">
                     <div class="song-header">
-                        <span>Playlist ID: {{ playlist_id }}</span>
+                        <span>{{ playlist.title }}</span>
                         <button class="toggle-icon toggle-btn">▼</button>
                     </div>
                     <div class="recommendations">
@@ -78,7 +78,7 @@
             {% for playlist_id, playlist in history_dict.items %}  
                 <div class="song-box">
                     <div class="song-header">
-                        <span>Playlist ID: {{ playlist_id }}</span>
+                        <span>{{ playlist.title }}</span>
                         <button class="toggle-icon toggle-btn">▼</button>
                     </div>
                     <div class="recommendations">
@@ -129,9 +129,6 @@
                             <strong>{{ song.title }}</strong> - {{ song.artist }}<br>
                         </div>
                     </div>
-                    {% if forloop.counter|divisibleby:6 %}
-                        <div class="clear"></div> <!-- Ensures a new row starts after every 6 songs -->
-                    {% endif %}
                 {% endfor %}
             </div>
         {% else %}
