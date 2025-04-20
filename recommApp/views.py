@@ -15,17 +15,17 @@ from recommApp.utils.recomFinder import load_knn_model, recommend_songs, train_a
 import json
 from django.http import JsonResponse
 
-os.environ['SPOTIPY_CLIENT_ID'] = '7d014370fbc24589848407b92579c6e7'
-os.environ['SPOTIPY_CLIENT_SECRET'] = '2e0b934440ab44eab116a6b87e7ac3cf'
+os.environ['SPOTIPY_CLIENT_ID'] = 'cfd82609829c4df08e69069c5c37e201'
+os.environ['SPOTIPY_CLIENT_SECRET'] = '0cc553a74abf4a328b0cd70a661fd01f'
 os.environ['SPOTIPY_REDIRECT_URI'] = 'http://127.0.0.1:8000/callback'
 
-# Create your views here.
+    # Create your views here.
 
 sp = spotipy.Spotify(
     auth_manager=SpotifyClientCredentials(
-        client_id='7d014370fbc24589848407b92579c6e7',
-        client_secret='2e0b934440ab44eab116a6b87e7ac3cf'
-    )   
+        client_id='cfd82609829c4df08e69069c5c37e201',
+        client_secret='0cc553a74abf4a328b0cd70a661fd01f'
+    )
 )
 
 def recomHome(request):
