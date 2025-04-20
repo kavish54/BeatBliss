@@ -68,3 +68,7 @@ def genreHome(request):
 
 def home(request):
     return render(request, 'genreApp/home.html')
+
+
+def aboutus(request):
+    return render(request, 'genreApp/aboutus.html')
