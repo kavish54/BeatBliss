@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♫</text></svg>">
+    {% comment %} <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♫</text></svg>"> {% endcomment %}
 </head>
 <body class="body-color">
     <!-- Mobile menu overlay -->
@@ -180,7 +180,7 @@
             <li><a href={% url "home" %}><i class="fas fa-chevron-right"></i> Home</a></li>
             <li><a href={% url "genreHome" %}><i class="fas fa-chevron-right"></i> Genre</a></li>
             <li><a href={% url "recHome" %}><i class="fas fa-chevron-right"></i> Recommender</a></li>
-            <li><a href="#"><i class="fas fa-chevron-right"></i> About</a></li>
+            <li><a href={% url "aboutus" %}><i class="fas fa-chevron-right"></i> About</a></li>
           </ul>
         </div>
       </div>

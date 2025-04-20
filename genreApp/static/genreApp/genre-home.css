@@ -1136,7 +1136,7 @@
 }
 
 /* Optional: Add a subtle pulsing animation to the scrollbar thumb */
-@keyframes pulse {
+/* @keyframes pulse {
   0% {
     box-shadow: 0 0 0 rgba(142, 68, 173, 0.4);
   }
@@ -1146,7 +1146,7 @@
   100% {
     box-shadow: 0 0 0 rgba(142, 68, 173, 0.4);
   }
-}
+} */
 
 /* Apply the animation on hover */
 ::-webkit-scrollbar-thumb:hover {
