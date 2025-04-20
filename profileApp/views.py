@@ -24,7 +24,7 @@ def profilePage(request):
         )
     )
 
-    current_user = request.user  # Use Django authentication system
+    current_user = request.session.get("current_user")  # Get from session
     profile = Profile.objects.get(user=current_user)
     user = User.objects.get(email=current_user)
     username = user.name
@@ -35,8 +35,33 @@ def profilePage(request):
     playlists = Playlist.objects.filter(playlistID__in=liked_playlists)
 
     for playlist in playlists:
-        playlist_dict[playlist.playlistID] = {"songs": []}
+        # Get the main song details for the playlist title
+        main_song_id = playlist.songID
+        try:
+            main_track = sp.track(main_song_id)
+            playlist_title = f"{main_track['name']} by {main_track['artists'][0]['name']}"
+        except SpotifyException:
+            playlist_title = f"Playlist {playlist.playlistID}"
+            
+        playlist_dict[playlist.playlistID] = {
+            "title": playlist_title,
+            "songs": []
+        }
 
+        # Add the main song as the first song in the list
+        try:
+            main_song_details = {
+                "spotify_id": main_song_id,
+                "title": main_track["name"],
+                "artist": ", ".join([artist["name"] for artist in main_track["artists"]]),
+                "image_url": main_track["album"]["images"][0]["url"] if main_track["album"]["images"] else "",
+                "preview_url": main_track.get("preview_url", ""),
+            }
+            playlist_dict[playlist.playlistID]["songs"].append(main_song_details)
+        except:
+            pass  # Skip if we already had an error above
+
+        # Add recommended songs
         for song_id in playlist.recommSongs:
             if not song_id:  # Skip empty IDs
                 continue
@@ -58,7 +83,31 @@ def profilePage(request):
     recent_playlists = Playlist.objects.filter(user=current_user).order_by('-created_at')[:5]
 
     for playlist in recent_playlists:
-        history_dict[playlist.playlistID] = {"songs": []}
+        # Get the main song details for the playlist title
+        main_song_id = playlist.songID
+        try:
+            main_track = sp.track(main_song_id)
+            playlist_title = f"{main_track['name']} by {main_track['artists'][0]['name']}"
+        except SpotifyException:
+            playlist_title = f"Playlist {playlist.playlistID}"
+            
+        history_dict[playlist.playlistID] = {
+            "title": playlist_title,
+            "songs": []
+        }
+
+        # Add the main song as the first song in the list
+        try:
+            main_song_details = {
+                "spotify_id": main_song_id,
+                "title": main_track["name"],
+                "artist": ", ".join([artist["name"] for artist in main_track["artists"]]),
+                "image_url": main_track["album"]["images"][0]["url"] if main_track["album"]["images"] else "",
+                "preview_url": main_track.get("preview_url", ""),
+            }
+            history_dict[playlist.playlistID]["songs"].append(main_song_details)
+        except:
+            pass  # Skip if we already had an error above
 
         for song_id in playlist.recommSongs:
             if not song_id:
@@ -76,7 +125,6 @@ def profilePage(request):
             except SpotifyException:
                 print(f"history----Invalid Spotify ID: {song_id}")
 
-    # Fetch liked songs list
     # Fetch liked songs list
     liked_songs = {}
 
