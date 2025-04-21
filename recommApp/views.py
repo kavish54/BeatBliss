@@ -15,18 +15,18 @@ from recommApp.utils.recomFinder import load_knn_model, recommend_songs, train_a
 import json
 from django.http import JsonResponse
 
-os.environ['SPOTIPY_CLIENT_ID'] = 'cfd82609829c4df08e69069c5c37e201'
-os.environ['SPOTIPY_CLIENT_SECRET'] = '0cc553a74abf4a328b0cd70a661fd01f'
+os.environ['SPOTIPY_CLIENT_ID'] = '2341525e14cc4f578e733d1d6a0a468a'
+os.environ['SPOTIPY_CLIENT_SECRET'] = '5a00a83d871045d5a27ffefedfbd0c04'
 os.environ['SPOTIPY_REDIRECT_URI'] = 'http://127.0.0.1:8000/callback'
 
     # Create your views here.
 
 sp = spotipy.Spotify(
-    auth_manager=SpotifyClientCredentials(
-        client_id='cfd82609829c4df08e69069c5c37e201',
-        client_secret='0cc553a74abf4a328b0cd70a661fd01f'
+        auth_manager=SpotifyClientCredentials(
+            client_id='2341525e14cc4f578e733d1d6a0a468a',
+            client_secret='5a00a83d871045d5a27ffefedfbd0c04'
+        )
     )
-)
 
 def recomHome(request):
     # if 'spotify_token' in request.session:
