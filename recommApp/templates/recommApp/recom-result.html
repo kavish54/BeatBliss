@@ -25,7 +25,7 @@
         <button><a class="nav-link" href={% url "home" %}>Home</a></button>
         <button><a class="nav-link" href={% url "genreHome" %}>Genre</a></button>
         <button><a class="nav-link" href={% url "recHome" %}>Recommender</a></button>
-        <button><a class="nav-link" href="#">About</a></button>
+        <button><a class="nav-link" href={% url "aboutus" %}>About</a></button>
     </div>
 
     <div class="auth">
@@ -45,7 +45,10 @@
     <div class="container">
          <div class='top-content'>
             <h2>Your song:</h2>
-            <button class='add-playlist-btn' onclick="addToPlaylist('{{ playlist_id }}'); return false;">Add to Spotify Playlist</button>
+            <div class="button-container">
+                <button class='add-playlist-btn' onclick="addToPlaylist('{{ playlist_id }}'); return false;">Add Playlist to Spotify</button>
+                <button class='like-playlist-btn' onclick="likePlaylist('{{ playlist_id }}'); return false;"><i class="fas fa-heart"></i> Like Playlist</button>
+            </div>
         </div>
          
         <div class="song-card">
@@ -164,6 +167,31 @@
             .catch(error => {
                 console.error("Error:", error);
                 showToast("An error occurred while liking the song.", "error");
+            });
+        }
+        
+        function likePlaylist(playlistId) {
+            fetch("/like-playlist/", {   
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({ playlist_id: playlistId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    showToast("Playlist added to your liked playlists!");
+                } else if (data.status === "info") {
+                    showToast(data.message, "info");
+                } else {
+                    showToast("Error: " + data.message, "error");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                showToast("An error occurred while liking the playlist.", "error");
             });
         }
         
@@ -309,4 +337,4 @@
         });
     </script>
 </body>
-</html>
+</html> 

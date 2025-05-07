@@ -1,0 +1,250 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeatBliss - Music Recommender</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'genreApp/home.css' %}">
+    <link rel="stylesheet" href="{% static 'genreApp/AboutUs.css' %}">
+</head>
+<body class="body-color">
+    <!-- Mobile menu overlay -->
+    <div class="menu-overlay" onclick="toggleMenu()"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="left-section">
+            <div class="logo">
+                <span>♫</span>
+                <a href="#" class="brand">BeatBliss</a>
+            </div>
+        </div>
+    
+        <div class="button-group">
+            <button><a class="nav-link" href={% url "home" %}>Home</a></button>
+            <button><a class="nav-link" href={% url "genreHome" %}>Genre</a></button>
+            <button><a class="nav-link" href={% url "recHome" %}>Recommender</a></button>
+            <button><a class="nav-link active" href={% url "aboutus" %}>About</a></button>
+        </div>
+    
+        <div class="auth">
+            {% if request.session.current_user %}
+            <a href={% url "profile-page" %}
+                ><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img"
+            /></a>
+            {% else %}
+            <a href={% url "login" %} class="login-button">Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- About Us Section -->
+    <section id="about" class="about-section">
+        <div class="about-header">
+            <h2>About BeatBliss</h2>
+            <p class="about-tagline">Where AI meets your musical journey</p>
+        </div>
+        
+        <div class="about-story">
+            <div class="story-image">
+                <img src="{% static 'genreApp/images/about-music.jpg' %}" alt="Music Experience" onerror="this.src='https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+            </div>
+            <div class="story-content">
+                <h3>Our Story</h3>
+                <p>At BeatBliss, we believe music is more than just sound—it's a journey of discovery and connection. Our team of passionate musicians, developers came together with a shared vision: to create an intelligent music platform that bridges the gap between listeners and the vast ocean of musical possibilities.
+                    .</p>
+                <p>We're committed to supporting both listeners and artists. By helping you discover new music that genuinely resonates with your preferences, we're also creating pathways for talented musicians to reach their ideal audience. It's a musical ecosystem where everyone wins.
+                </p>
+                <p>The future of music discovery is here, and it's powered by the perfect harmony of human passion and artificial intelligence. Join us on this exciting journey as we continue to innovate and enhance how the world experiences music.
+                </p>
+            </div>
+        </div>
+        
+        <div class="mission-values">
+            <div class="mission-card">
+                <div class="icon-container">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <h3>Our Mission</h3>
+                <p>To transform how people discover and experience music through intelligent technology that understands both the science and soul of music.</p>
+            </div>
+            
+            <div class="mission-card">
+                <div class="icon-container">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <h3>Our Vision</h3>
+                <p>A world where everyone can easily find music that resonates with them personally, breaking down barriers between listeners and the vast universe of musical expression.</p>
+            </div>
+            
+            <div class="mission-card">
+                <div class="icon-container">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3>Our Values</h3>
+                <p>Accessibility and a deep respect for the art of music guide everything we do at BeatBliss.</p>
+            </div>
+        </div>
+        
+        <div class="services-section">
+            <h3>What We Offer</h3>
+            <div class="services-grid">
+                <div class="service-item">
+                    <i class="fas fa-music"></i>
+                    <h4>Genre Classification</h4>
+                    <p>Our AI analyzes audio patterns to identify genres with remarkable accuracy.</p>
+                </div>
+                
+                <div class="service-item">
+                    <i class="fas fa-headphones-alt"></i>
+                    <h4>Smart Recommendations</h4>
+                    <p>Get song suggestions based on your listening preferences.</p>
+                </div>
+                
+                <div class="service-item">
+                    <i class="fas fa-compact-disc"></i>
+                    <h4>Music Analysis</h4>
+                    <p>Understand the technical aspects of your favorite songs.</p>
+                </div>
+                
+            </div>
+        </div>
+        
+        <div class="team-section">
+            <h3>Meet Our Team</h3>
+            <div class="team-carousel">
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="{% static 'images/kavish.jpg' %}" alt="Team Member" onerror="this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                    </div>
+                    <div class="member-info">
+                        <h4>Kavish Bhavsar</h4>
+                        <p class="member-title">Backend Developer</p>
+                        <p class="member-bio">Kavish combines a passion for music with expertise in machine learning to create intelligent music systems.</p>
+                        <div class="member-social">
+                            <a href="https://www.linkedin.com/in/kavish-bhavsar-97b22b26a/"><i class="fab fa-linkedin"></i></a>
+                            <a href="https://github.com/kavish54"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="{% static 'images/priyanshi.jpg' %}" alt="Team Member" onerror="this.src='https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                    </div>
+                    <div class="member-info">
+                        <h4>Priyanshi Bharakhada</h4>
+                        <p class="member-title">Frontend Developer</p>
+                        <p class="member-bio">Crafted an engaging user interface and significantly contributed to the development of the recommender system that connects users with the right music.</p>
+                        <div class="member-social">
+                            <a href="https://www.linkedin.com/in/priyanshi-bharakhada"><i class="fab fa-linkedin"></i></a>
+                            <a href="https://github.com/PriyanshiBharakhada"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="{% static 'images/krishna.jpg' %}" alt="Team Member" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                    </div>
+                    <div class="member-info">
+                        <h4>Krishna Lalwani</h4>
+                        <p class="member-title">Frontend Developer</p>
+                        <p class="member-bio">Krishna architects our platform to deliver, seamless, responsive experiences for music lovers everywhere.</p>
+                        <div class="member-social">
+                            <a href="https://www.linkedin.com/in/krishna-lalwani-291379253/"><i class="fab fa-linkedin"></i></a>
+                            <a href="https://github.com/Magic-coderrr"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="{% static 'images/mihir.jpg' %}" alt="Team Member" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                    </div>
+                    <div class="member-info">
+                        <h4>Mihir Patel</h4>
+                        <p class="member-title">Backend Developer</p>
+                        <p class="member-bio">Mihir architects our platform to deliver seamless, responsive experiences for music lovers everywhere.</p>
+                        <div class="member-social">
+                            <a href="https://www.linkedin.com/in/mihirpateldt/"><i class="fab fa-linkedin"></i></a>
+                            <a href="https://github.com/MihirPatelDT"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer id='ftr' class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <div class="footer-logo">
+                    <span>♫</span>
+                    <a href="#">BeatBliss</a>
+                </div>
+                <p>Discover and classify music genres with our advanced AI technology.</p>
+                <p>Perfect for artists, producers, and music enthusiasts.</p>
+                <div class="social-links">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-spotify"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href={% url "home" %}><i class="fas fa-chevron-right"></i> Home</a></li>
+                    <li><a href={% url "genreHome" %}><i class="fas fa-chevron-right"></i> Genre</a></li>
+                    <li><a href={% url "recHome" %}><i class="fas fa-chevron-right"></i> Recommender</a></li>
+                    <li><a href={% url "aboutus" %}><i class="fas fa-chevron-right"></i> About</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2025 BeatBliss. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const buttonGroup = document.querySelector('.button-group');
+            const hamburger = document.querySelector('.hamburger');
+            const menuOverlay = document.querySelector('.menu-overlay');
+            
+            buttonGroup.classList.toggle('active');
+            hamburger.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+            
+            // Prevent scrolling when menu is open
+            if (buttonGroup.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hamburger menu element if not already in HTML
+            if (!document.querySelector('.hamburger')) {
+                const navbar = document.querySelector('.navbar');
+                const hamburger = document.createElement('div');
+                hamburger.className = 'hamburger';
+                
+                for (let i = 0; i < 3; i++) {
+                    const bar = document.createElement('div');
+                    hamburger.appendChild(bar);
+                }
+                
+                hamburger.addEventListener('click', toggleMenu);
+                navbar.appendChild(hamburger);
+            }
+        });
+    </script>
+</body>
+</html>

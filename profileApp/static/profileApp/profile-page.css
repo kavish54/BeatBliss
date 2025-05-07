@@ -46,7 +46,6 @@ body {
 .logo span {
   font-size: 2rem;
   color: #FF6584;
-  animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
@@ -594,11 +593,12 @@ body {
   box-shadow: 0 8px 20px rgba(255, 101, 132, 0.4);
 }
 
-/* Liked Songs Grid */
+/* Liked Songs Grid - FIXED SECTION */
 .liked-songs-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 1.5rem;
+  grid-auto-flow: dense;
 }
 
 .liked-song {
@@ -608,6 +608,9 @@ body {
   transition: all 0.3s ease;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .liked-song:hover {
@@ -621,19 +624,30 @@ body {
   border-radius: 12px 12px 0 0;
   margin-right: 0;
   border: none;
+  object-fit: cover;
 }
 
 .liked-song div {
   padding: 1rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .liked-song strong {
   font-size: 1rem;
   margin-bottom: 0.25rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+/* Remove the clear div that was causing layout issues */
 .clear {
-  clear: both;
+  display: none;
 }
 
 /* Mobile Responsive */
@@ -739,6 +753,7 @@ body {
   
   .liked-songs-container {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
   }
   
   .liked-song .song-img {

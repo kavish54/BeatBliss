@@ -25,7 +25,7 @@
             <button><a class="nav-link" href={% url "home" %}>Home</a></button>
             <button><a class="nav-link" href={% url "genreHome" %}>Genre</a></button>
             <button><a class="nav-link" href={% url "recHome" %}>Recommender</a></button>
-            <button><a class="nav-link" href="#">About</a></button>
+            <button><a class="nav-link" href={% url "aboutus"%}>About</a></button>
         </div>
     
         <div class="auth">
@@ -34,7 +34,7 @@
                 ><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img"
             /></a>
             {% else %}
-                <a href={% url "login" %}><h3>Login</h3></a>
+                <a href={% url "login" %} class="login-button"><h3>Login</h3></a>
             {% endif %}
         </div>
     </nav>
@@ -157,7 +157,7 @@
               <li><a href={% url "home" %}><i class="fas fa-chevron-right"></i> Home</a></li>
               <li><a href={% url "genreHome" %}><i class="fas fa-chevron-right"></i> Genre</a></li>
               <li><a href={% url "recHome" %}><i class="fas fa-chevron-right"></i> Recommender</a></li>
-              <li><a href="#"><i class="fas fa-chevron-right"></i> About</a></li>
+              <li><a href={% url "aboutus"%}><i class="fas fa-chevron-right"></i> About</a></li>
             </ul>
           </div>
         </div>
