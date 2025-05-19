@@ -55,28 +55,6 @@
         </div>
     </div>
 
-    <!-- Upload Section -->
-    {% comment %} <div class="upload-section">
-        <div class="upload-container">
-            <h2>Upload Your Track</h2>
-            <form action="" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                
-                <div class="file-upload-wrapper">
-                    <label for="file-upload" class="custom-file-upload">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <p>Drag your audio file here</p>
-                        <span>or click to browse</span>
-                    </label>
-                    {{ form.file }}
-                    <div class="filename-display" id="filename-display"></div>
-                </div>
-                
-                <button type="submit" class="submit-btn">Analyze Now</button>
-            </form>
-        </div>
-    </div> {% endcomment %}
-
     <div class="upload-section">
         <div class="upload-container">
             <h2>Upload Your Track</h2>
@@ -168,24 +146,6 @@
       </footer>
 
     <script>
-        {% comment %} document.addEventListener("DOMContentLoaded", function () {
-            let fileInput = document.getElementById("file-upload");
-            let fileLabel = document.getElementById("file-label");
-    
-            // Ensure clicking label triggers only one file selection
-            document.querySelector(".custom-file-upload").addEventListener("click", function () {
-                fileInput.click();
-            });
-    
-            // Update filename display when file is selected
-            fileInput.addEventListener("change", function () {
-                if (this.files.length > 0) {
-                    fileLabel.textContent = this.files[0].name;  // Show selected filename
-                } else {
-                    fileLabel.textContent = "or click to browse";
-                }
-            });
-        }); {% endcomment %}
         function toggleMenu() {
             const navLinks = document.querySelector('.nav-links');
             const hamburger = document.querySelector('.hamburger');

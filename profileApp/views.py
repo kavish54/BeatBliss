@@ -9,20 +9,21 @@ from recommApp.models import Playlist
 from .models import Profile
 from spotipy.oauth2 import SpotifyClientCredentials
 from spotipy.exceptions import SpotifyException
+from decouple import config
 
 def profilePage(request):
-    os.environ['SPOTIPY_CLIENT_ID'] = '2341525e14cc4f578e733d1d6a0a468a'
-    os.environ['SPOTIPY_CLIENT_SECRET'] = '5a00a83d871045d5a27ffefedfbd0c04'
-    os.environ['SPOTIPY_REDIRECT_URI'] = 'http://127.0.0.1:8000/callback'
+    os.environ['SPOTIPY_CLIENT_ID'] = config('SPOTIPY_CLIENT_ID')
+    os.environ['SPOTIPY_CLIENT_SECRET'] = config('SPOTIPY_CLIENT_SECRET')
+    os.environ['SPOTIPY_REDIRECT_URI'] = config('SPOTIPY_REDIRECT_URI')
 
     # Create your views here.
 
     sp = spotipy.Spotify(
-        auth_manager=SpotifyClientCredentials(
-            client_id='2341525e14cc4f578e733d1d6a0a468a',
-            client_secret='5a00a83d871045d5a27ffefedfbd0c04'
+            auth_manager=SpotifyClientCredentials(
+                client_id= config('SPOTIPY_CLIENT_ID'),
+                client_secret= config('SPOTIPY_CLIENT_ID')
+            )
         )
-    )
 
     current_user = request.session.get("current_user")  # Get from session
     profile = Profile.objects.get(user=current_user)

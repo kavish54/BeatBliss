@@ -14,17 +14,18 @@ from recommApp.utils.recomFinder import load_knn_model, recommend_songs, train_a
 
 import json
 from django.http import JsonResponse
+from decouple import config
 
-os.environ['SPOTIPY_CLIENT_ID'] = '2341525e14cc4f578e733d1d6a0a468a'
-os.environ['SPOTIPY_CLIENT_SECRET'] = '5a00a83d871045d5a27ffefedfbd0c04'
-os.environ['SPOTIPY_REDIRECT_URI'] = 'http://127.0.0.1:8000/callback'
+os.environ['SPOTIPY_CLIENT_ID'] = config('SPOTIPY_CLIENT_ID')
+os.environ['SPOTIPY_CLIENT_SECRET'] = config('SPOTIPY_CLIENT_SECRET')
+os.environ['SPOTIPY_REDIRECT_URI'] = config('SPOTIPY_REDIRECT_URI')
 
     # Create your views here.
 
 sp = spotipy.Spotify(
         auth_manager=SpotifyClientCredentials(
-            client_id='2341525e14cc4f578e733d1d6a0a468a',
-            client_secret='5a00a83d871045d5a27ffefedfbd0c04'
+            client_id= config('SPOTIPY_CLIENT_ID'),
+            client_secret= config('SPOTIPY_CLIENT_ID')
         )
     )
 
@@ -163,7 +164,6 @@ def show_recommendations(request, sid):
         "spotify_url": track['external_urls']['spotify'],
         "preview_url": track['preview_url']
     })
-    print(current_song["preview_url"])
     suggested = []
     song_details = []
     for song in recommendations:
@@ -295,9 +295,7 @@ def like_song(request):
             return JsonResponse({"status": "error", "message": "User not authenticated with Spotify"}, status=401)
 
         sp = spotipy.Spotify(auth=token_info["access_token"])
-        print(song_id+"gujaasananan")
         try:
-            print(song_id+"dasananan")
             sp.current_user_saved_tracks_add([song_id])
             profile = Profile.objects.get(user=user)
             profile.liked_song_list.append(song_id)
@@ -312,9 +310,7 @@ def like_playlist(request):
     if request.method == "POST":
         data = json.loads(request.body)
         playlist_id = data.get("playlist_id")
-        print(playlist_id)
         user_email = request.session.get("current_user")
-        print(user_email)
         
         try:
             # Get the user's profile

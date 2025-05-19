@@ -5,10 +5,6 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import NearestNeighbors
 import os
 
-# def load_data(merged_data_path):
-#     # Load the merged dataset
-#     merged_df = pd.read_csv(merged_data_path)
-#     return merged_df
 model_path_E = os.path.join(settings.MEDIA_ROOT, "ML_models/knn_model.pkl")
 features_path_E = os.path.join(settings.MEDIA_ROOT, "ML_models/feature_matrix.pkl")
 
@@ -65,21 +61,3 @@ def recommend_songs(song_name, merged_df, nn_model, feature_matrix, num_recommen
         })
 
     return recommended_songs
-
-# if __name__ == "_main_":
-#     merged_data_path = r"C:\Users\lalwa\Downloads\cleaned_acoustic_features.csv"
-    
-#     merged_df = load_data(merged_data_path)
-    
-#     # Try to load the saved model; train if not available
-#     nn_model, feature_matrix = load_knn_model()
-#     if nn_model is None:
-#         nn_model, feature_matrix = train_and_save_knn_model(merged_df)
-    
-#     # Example usage
-#     song_name = "The Middle"  # Change this to any song from your dataset
-#     recommendations = recommend_songs(song_name, merged_df, nn_model, feature_matrix, 5)
-    
-#     print(f"Recommended songs for '{song_name}':")
-#     for idx, (rec_song, similarity) in enumerate(recommendations, 1):
-#         print(f"{idx}. '{rec_song}' (Similarity: {similarity})")

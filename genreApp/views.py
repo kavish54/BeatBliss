@@ -37,19 +37,7 @@ def genreHome(request):
             with open(MODEL_SAVE_PATH, 'rb') as f:
                 loaded_model = pickle.load(f)
             result = predict_genre(loaded_model, file_path)
-            # wav_path = convert_to_wav(file_path)  # Convert to WAV
-            # song, sr = librosa.load(wav_path, sr=None)
-            # features = feature_extract(song, sr)
-            
-            # genre = genre_finder(features)
-            
-            # Save extracted features
-            # for key, value in features.items():
-            #     setattr(song_obj, key, value)
-            
-            # song_obj.genre = genre
-            # song_obj.duration = len(song) / sr  # Duration in seconds
-            # song_obj.save()
+
             
             # Add song and success flag to context
             genres = []

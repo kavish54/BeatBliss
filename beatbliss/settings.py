@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,10 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-pzc8=wu_tew4u!z&yyc!$3cmxq@u(k&e3=zl5yiwg-=ajd!8d&'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -83,9 +84,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'defaultdb',
         'USER': 'avnadmin',
-        'PASSWORD': 'AVNS_n3GH7zaFcHZo9CGiT9h',
-        'HOST': 'capstone-e-comm-website.g.aivencloud.com',  # Example: example.aivencloud.com
-        'PORT': '17407',  # Default: 5432
+        'PASSWORD': config('AIVEN_PASSWORD'),
+        'HOST': config('AIVEN_HOST'),  # Example: example.aivencloud.com
+        'PORT': config('AIVEN_PORT'),  # Default: 5432
         'OPTIONS': {
             'sslmode': 'require',  # Aiven requires SSL
         },
@@ -146,10 +147,11 @@ AUTH_USER_MODEL = 'loginApp.User'
 
 # settings.py
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'mihirpatel3592@gmail.com'  # Replace with your email
-EMAIL_HOST_PASSWORD = 'azfo oflh xszf dmyi'  # Replace with your email password
-DEFAULT_FROM_EMAIL = 'no-reply@example.com'
+EMAIL_BACKEND = config('EMAIL_BACKEND')
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # Replace with your email
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  # Replace with your email password
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
+
