@@ -1,6 +1,6 @@
 # 🎵 BeatBliss - Music Genre Classification & Recommender System
 
-BeatBliss is a web-based application that allows users to **upload music files**, detect their **genre** using machine learning, and receive **personalized recommendations** through integration with the **Spotify API**. Designed for music lovers, curators, and enthusiasts, it bridges the gap between user preferences and music discovery.
+BeatBliss is a web-based application that allows users to **upload music files**, detect their **genre** using machine learning, and receive ** recommendations** through based on their favorite songs. Designed for music lovers, curators, and enthusiasts, it bridges the gap between user preferences and music discovery.
 
 ---
 
